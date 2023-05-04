@@ -1,0 +1,6 @@
+C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\BibaScript.exe.config
+C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\BibaScript.exe
+C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\BibaScript.pdb
+C:\repos\BibaScript\BibaScript\BibaScript\obj\Debug\BibaScript.csproj.CoreCompileInputs.cache
+C:\repos\BibaScript\BibaScript\BibaScript\obj\Debug\BibaScript.exe
+C:\repos\BibaScript\BibaScript\BibaScript\obj\Debug\BibaScript.pdb
