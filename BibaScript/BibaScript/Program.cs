@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using BeutifulConsole;
+using InterpreterBibaScript;
 
 namespace BibaScript
 {
@@ -11,7 +13,7 @@ namespace BibaScript
             {
                 try
                 {
-                    View.ColorWriteLine(file, ConsoleColor.Cyan);
+                    BSExecutor.GetInstance().Run(File.ReadAllText(file));
                 }
                 catch (Exception ex)
                 {

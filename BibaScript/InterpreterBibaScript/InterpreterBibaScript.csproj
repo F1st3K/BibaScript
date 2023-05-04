@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E9F10480-7F40-4A51-9F34-F13E8DE30698}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>BibaScript</RootNamespace>
-    <AssemblyName>BibaScript</AssemblyName>
+    <ProjectGuid>{EED88EA9-89A2-4C73-A952-7D08EBEDBF1B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InterpreterBibaScript</RootNamespace>
+    <AssemblyName>InterpreterBibaScript</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,20 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BSExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BeautifulСonsole\BeautifulСonsole.csproj">
-      <Project>{2dcffcaa-49ae-4ee6-b601-7f6b61ce3848}</Project>
+      <Project>{2DCFFCAA-49AE-4EE6-B601-7F6B61CE3848}</Project>
       <Name>BeautifulСonsole</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\InterpreterBibaScript\InterpreterBibaScript.csproj">
-      <Project>{eed88ea9-89a2-4c73-a952-7d08ebedbf1b}</Project>
-      <Name>InterpreterBibaScript</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
