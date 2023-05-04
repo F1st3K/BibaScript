@@ -1,4 +1,5 @@
 ﻿using BeutifulConsole;
+using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
@@ -15,7 +16,10 @@ namespace InterpreterBibaScript
 
         public void Run(string programm)
         {
-            View.ColorWrite(programm, System.ConsoleColor.Cyan);
+            programm = "{\n" + programm + "\n}";
+            var parser = new Parser();
+            var commands = parser.Parse(programm);
+            
         }
 
     }
