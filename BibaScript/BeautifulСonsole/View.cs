@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsoleColor
+namespace BeutifulConsole
 {
     public static class View
     {

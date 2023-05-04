@@ -1,4 +1,5 @@
 ﻿using System;
+using BeutifulConsole;
 
 namespace BibaScript
 {
