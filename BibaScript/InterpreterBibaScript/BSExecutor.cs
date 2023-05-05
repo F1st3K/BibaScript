@@ -1,7 +1,4 @@
-﻿using BeutifulConsole;
-using System.Collections.Generic;
-
-namespace InterpreterBibaScript
+﻿namespace InterpreterBibaScript
 {
     public sealed class BSExecutor
     {

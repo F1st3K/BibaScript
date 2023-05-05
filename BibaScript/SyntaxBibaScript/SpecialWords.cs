@@ -1,6 +1,6 @@
-﻿namespace InterpreterBibaScript
+﻿namespace SyntaxBibaScript
 {
-    internal enum SpecialWords
+    public enum SpecialWords
     {
         BeginCode,
         EndCode,
