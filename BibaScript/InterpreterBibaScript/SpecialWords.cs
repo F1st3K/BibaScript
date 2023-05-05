@@ -4,8 +4,20 @@
     {
         BeginCode,
         EndCode,
+        BeginParameters,
+        EndParameters,
         EndInstruction,
-        BeginString,
-        EndString,
+        SeparatorString,
+        EndFloat,
+        ValueTrue,
+        ValueFalse,
+        TypeInteger,
+        TypeString,
+        TypeFloat,
+        TypeBoolean,
+        DeclarationFunction,
+        ConstructionIf,
+        ConstructionElse,
+        ConstructionWhile,
     }
 }
