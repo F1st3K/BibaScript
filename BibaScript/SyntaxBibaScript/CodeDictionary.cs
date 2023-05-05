@@ -33,6 +33,8 @@ namespace SyntaxBibaScript
             set { }
         }
 
+        public bool TryGetValue(SpecialWords key, out string value) => _dictionary.TryGetValue(key, out value);
+
         public bool ContainsKey(SpecialWords key) => _dictionary.ContainsKey(key);
 
         public bool ContainsValue(string value) => _dictionary.ContainsValue(value);

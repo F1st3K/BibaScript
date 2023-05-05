@@ -10,3 +10,5 @@ C:\repos\BibaScript\BibaScript\BibaScript\obj\Debug\BibaScript.csproj.AssemblyRe
 C:\repos\BibaScript\BibaScript\BibaScript\obj\Debug\BibaScript.csproj.CopyComplete
 C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\InterpreterBibaScript.dll
 C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\InterpreterBibaScript.pdb
+C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\SyntaxBibaScript.dll
+C:\repos\BibaScript\BibaScript\BibaScript\bin\Debug\SyntaxBibaScript.pdb

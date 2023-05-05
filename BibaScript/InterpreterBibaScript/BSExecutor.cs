@@ -1,4 +1,6 @@
-﻿namespace InterpreterBibaScript
+﻿using BeutifulConsole;
+
+namespace InterpreterBibaScript
 {
     public sealed class BSExecutor
     {
@@ -13,10 +15,17 @@
 
         public void Run(string programm)
         {
-            programm = "{\n" + programm + "\n}";
             var parser = new Parser();
             var commands = parser.Parse(programm);
-            
+            var thread = new ExecuteThread();
+            try
+            {
+                thread.PeformBlockCommand(commands);
+            }
+            catch (System.Exception ex)
+            {
+                View.ColorWriteLine(ex.Message, System.ConsoleColor.Red);
+            }
         }
 
     }

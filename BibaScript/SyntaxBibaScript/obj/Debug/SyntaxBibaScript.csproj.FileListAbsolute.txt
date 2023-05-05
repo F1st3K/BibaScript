@@ -1,0 +1,6 @@
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\bin\Debug\SyntaxBibaScript.dll
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\bin\Debug\SyntaxBibaScript.pdb
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\obj\Debug\SyntaxBibaScript.csproj.AssemblyReference.cache
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\obj\Debug\SyntaxBibaScript.csproj.CoreCompileInputs.cache
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\obj\Debug\SyntaxBibaScript.dll
+C:\repos\BibaScript\BibaScript\SyntaxBibaScript\obj\Debug\SyntaxBibaScript.pdb
