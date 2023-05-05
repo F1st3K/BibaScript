@@ -15,10 +15,6 @@ namespace InterpreterBibaScript
 
         public CodeTypes()
         {
-            Add(SpecialWords.SeparatorString, "\"");
-            Add(SpecialWords.EndFloat, "f");
-            Add(SpecialWords.ValueTrue, "true");
-            Add(SpecialWords.ValueFalse, "fasle");
             Add(SpecialWords.TypeInteger, "int");
             Add(SpecialWords.TypeString, "string");
             Add(SpecialWords.TypeFloat, "float");

@@ -16,6 +16,8 @@
         TypeFloat,
         TypeBoolean,
         DeclarationFunction,
+        ValueVoid,
+        FunctionReturn,
         ConstructionIf,
         ConstructionElse,
         ConstructionWhile,
