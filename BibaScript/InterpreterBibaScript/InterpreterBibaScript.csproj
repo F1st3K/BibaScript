@@ -44,6 +44,7 @@
     <Compile Include="BSExecutor.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecialWords.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BeautifulСonsole\BeautifulСonsole.csproj">

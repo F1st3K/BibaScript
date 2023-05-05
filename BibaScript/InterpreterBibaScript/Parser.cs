@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
     internal sealed class Parser
     {
-        private Dictionary<Separator, string> CodeSeparators;
+        private Dictionary<SpecialWords, string> CodeSeparators;
 
         public string[] EmptySeparators { get; private set; }
 
         public Parser()
         {
             EmptySeparators = new string[] { " ", "\n", "\t", "\r" };
-            CodeSeparators = new Dictionary<Separator, string>();
-            CodeSeparators.Add(Separator.BeginCode, "{");
-            CodeSeparators.Add(Separator.EndCode, "}");
-            CodeSeparators.Add(Separator.EndLine, ";");
+            CodeSeparators = new Dictionary<SpecialWords, string>();
+            CodeSeparators.Add(SpecialWords.BeginCode, "{");
+            CodeSeparators.Add(SpecialWords.EndCode, "}");
+            CodeSeparators.Add(SpecialWords.EndInstruction, ";");
         }
 
         public string[] Parse(string programm)
@@ -29,12 +25,10 @@ namespace InterpreterBibaScript
             {
                 bool isSeparator = false;
                 foreach (var sp in CodeSeparators.Values)
-                    if (element.EndsWith(sp) && element != sp)
+                    if (element.Contains(sp) && element != sp)
                     {
                         isSeparator = true;
-                        element.Replace(sp, string.Empty);
-                        commands.Add(element);
-                        commands.Add(sp);
+                        commands.AddRange(Select(element, sp));
                         break;
                     }
                 if (isSeparator == false)
@@ -45,11 +39,10 @@ namespace InterpreterBibaScript
             return commands.ToArray();
         }
 
-        internal enum Separator
+        private string[] Select(string value, string selection)
         {
-            BeginCode,
-            EndCode,
-            EndLine,
+            return value.Replace(selection, " " + selection + " ").Split(new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);
         }
+
     }
 }
