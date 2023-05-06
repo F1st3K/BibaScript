@@ -7,11 +7,13 @@ namespace InterpreterBibaScript
     {
         public string[] EmptySeparators { get; private set; }
 
-        public Parser()
+        public Parser(string[] empty)
         {
-            EmptySeparators = new string[] { " ", "\n", "\t", "\r" };
+            //Get useless strings
+            EmptySeparators = empty;
         }
 
+        //This method separate use without useless
         public string[] Parse(string programm)
         {
             var commands = new List<string>();
@@ -34,6 +36,7 @@ namespace InterpreterBibaScript
             return commands.ToArray();
         }
 
+        //Select main separators
         private string[] Select(string value, string selection)
         {
             return value.Replace(selection, " " + selection + " ").Split(new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);

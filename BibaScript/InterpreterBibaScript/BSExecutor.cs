@@ -13,9 +13,10 @@ namespace InterpreterBibaScript
             return _instance;
         }
 
+        //Run programm
         public void Run(string programm)
         {
-            var parser = new Parser();
+            var parser = new Parser(new string[] { " ", "\n", "\t", "\r" });
             var commands = parser.Parse(programm);
             var thread = new ExecuteThread();
             try

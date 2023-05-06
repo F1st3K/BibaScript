@@ -6,28 +6,32 @@ namespace InterpreterBibaScript
 {
     internal class ExecuteThread
     {
-        private string _endString;
-        private string _beginCode;
-        private string _endCode;
+        private readonly string _endString;
+        private readonly string _beginCode;
+        private readonly string _endCode;
 
         public ExecuteThread()
         {
-            CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndInstruction, out _endString);
-            CodeSeparators.GetInstance().TryGetValue(SpecialWords.BeginCode, out _beginCode);
-            CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndCode, out _endCode);
+            //Try get syntax instruction with library
+            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndInstruction, out _endString) == false)
+                throw new System.Exception("No such end instruction syntax");
+            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.BeginCode, out _beginCode) == false)
+                throw new System.Exception("No such begin code syntax");
+            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndCode, out _endCode) == false)
+                throw new System.Exception("No such end code syntax");
         }
 
+        //This cycle run separate code on block commands and run execute for one command
         public void PeformBlockCommand(string[] commands)
         {
-            View.ColorWriteLine(_beginCode, System.ConsoleColor.Cyan);
-            for (int i = 0; i < commands.Length; i++)
+            for (int i = 0; i < commands.Length; )
             {
                 var cmds = new List<string>();
                 if (commands[i] == _beginCode)
                 {
-                    i++;
-                    var count = 1;
-                    for (; commands[i] != _endCode && count != 0; i++)
+                    //Such block command and run new thread
+                    var count = 0;
+                    do
                     {
                         if (commands[i] == _beginCode)
                             count++;
@@ -38,31 +42,38 @@ namespace InterpreterBibaScript
                         if (i >= commands.Length)
                             throw new System.Exception("Non such end command " + i);
                         cmds.Add(commands[i]);
+                        i++;
                     }
+                    while (count != 0);
+                    cmds.RemoveAt(0);
+                    cmds.RemoveAt(cmds.Count - 1);
                     new ExecuteThread().PeformBlockCommand(cmds.ToArray());
                     continue;
                 }
-                var countBraket = 0;
-                var codeMode = false;
-                for (; codeMode ? countBraket != 0 : commands[i] != _endString; i++)
+                //Such and run command
+                var mode = false;
+                var countBaket = 0;
+                do
                 {
-                    if (commands[i] == _beginCode && !codeMode)
-                        codeMode = true;
+                    if (commands[i] == _beginCode && countBaket == 0)
+                        mode = true;
                     if (commands[i] == _beginCode)
-                        countBraket++;
+                        countBaket++;
                     if (commands[i] == _endCode)
-                        countBraket--;
-                    if (countBraket < 0)
+                        countBaket--;
+                    if (countBaket < 0)
                         throw new System.Exception("Invalid code separator " + i);
                     if (i >= commands.Length)
                         throw new System.Exception("Non such end command " + i);
                     cmds.Add(commands[i]);
+                    i++;
                 }
+                while (mode ? countBaket != 0 : commands[i-1] != _endString);
                 PeformCommand(cmds.ToArray());
             }
-            View.ColorWriteLine(_endCode, System.ConsoleColor.Cyan);
         }
 
+        //This method run command
         public void PeformCommand(string[] command)
         {
             View.ColorWriteLine(_endString, System.ConsoleColor.Yellow);
