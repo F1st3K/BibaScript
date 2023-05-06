@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
-    internal class ExecuteThread
+    internal sealed class ExecuteThread
     {
         private readonly string _endString;
         private readonly string _beginCode;
@@ -47,7 +47,9 @@ namespace InterpreterBibaScript
                     while (count != 0);
                     cmds.RemoveAt(0);
                     cmds.RemoveAt(cmds.Count - 1);
+                    var memory = Memory.GetInstance();
                     new ExecuteThread().PeformBlockCommand(cmds.ToArray());
+                    Memory.SetInstance(memory);
                     continue;
                 }
                 //Such and run command
