@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSExecutor.cs" />
+    <Compile Include="ExecuteInstruction.cs" />
     <Compile Include="ExecuteThread.cs" />
+    <Compile Include="Memory.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
