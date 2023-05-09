@@ -20,26 +20,17 @@ namespace InterpreterBibaScript
             var temp = programm.Split(EmptySeparators, System.StringSplitOptions.RemoveEmptyEntries);
             foreach (var element in temp)
             {
-                bool isSeparator = false;
-                foreach (var sp in CodeSeparators.GetInstance().Values)
-                    if (element.Contains(sp) && element != sp)
-                    {
-                        isSeparator = true;
-                        commands.AddRange(Select(element, sp));
-                        break;
-                    }
-                if (isSeparator == false)
-                {
-                    commands.Add(element);
-                }
+                commands.AddRange(Select(element, CodeSeparators.GetInstance().Values));
             }
             return commands.ToArray();
         }
 
         //Select main separators
-        private string[] Select(string value, string selection)
+        private string[] Select(string value, string[] selection)
         {
-            return value.Replace(selection, " " + selection + " ").Split(new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in selection)
+                value =  value.Replace(item, " " + item + " ");
+            return value.Split(new char[] {' '}, System.StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

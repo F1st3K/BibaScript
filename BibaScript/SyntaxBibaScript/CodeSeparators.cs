@@ -18,6 +18,7 @@
             _dictionary.Add(SpecialWords.BeginParameters, "(");
             _dictionary.Add(SpecialWords.EndParameters, ")");
             _dictionary.Add(SpecialWords.EndInstruction, ";");
+            _dictionary.Add(SpecialWords.ContinueCode, ":");
         }
     }
 }

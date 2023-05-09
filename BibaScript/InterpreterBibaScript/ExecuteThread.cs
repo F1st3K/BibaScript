@@ -7,6 +7,7 @@ namespace InterpreterBibaScript
     {
         private readonly string _endString;
         private readonly string _beginCode;
+        private readonly string _continueCode;
         private readonly string _endCode;
 
         public ExecuteThread()
@@ -18,6 +19,8 @@ namespace InterpreterBibaScript
                 throw new System.Exception("No such begin code syntax");
             if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndCode, out _endCode) == false)
                 throw new System.Exception("No such end code syntax");
+            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.ContinueCode, out _continueCode) == false)
+                throw new System.Exception("No such continue code syntax");
         }
 
         //This cycle run separate code on block commands and run execute for one command
@@ -53,8 +56,12 @@ namespace InterpreterBibaScript
                     continue;
                 }
                 //Such and run command
-                var mode = false;
-                var countBaket = 0;
+                do
+                {
+                    var mode = false;
+                    var countBaket = 0;
+                    if (commands[i] == _continueCode)
+                        i++;
                     do
                     {
                         if (commands[i] == _beginCode && countBaket == 0)
@@ -71,6 +78,10 @@ namespace InterpreterBibaScript
                         i++;
                     }
                     while (mode ? countBaket != 0 : commands[i - 1] != _endString);
+                    if (i >= commands.Length)
+                        break;
+                }
+                while (commands[i] == _continueCode);
                 execute.PeformCommand(cmds.ToArray());
             }
         }

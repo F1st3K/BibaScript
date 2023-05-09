@@ -4,6 +4,7 @@
     {
         BeginCode,
         EndCode,
+        ContinueCode,
         BeginParameters,
         EndParameters,
         EndInstruction,
