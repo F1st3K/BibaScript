@@ -19,6 +19,7 @@
             _dictionary.Add(SpecialWords.EndParameters, ")");
             _dictionary.Add(SpecialWords.EndInstruction, ";");
             _dictionary.Add(SpecialWords.ContinueCode, ":");
+            _dictionary.Add(SpecialWords.Assign, "=");
         }
     }
 }

@@ -18,10 +18,9 @@ namespace InterpreterBibaScript
         {
             var parser = new Parser(new string[] { " ", "\n", "\t", "\r" });
             var commands = parser.Parse(programm);
-            var thread = new ExecuteThread();
             try
             {
-                thread.PeformBlockCommand(commands);
+                new ExecuteThread(commands).PeformBlockCommand();
             }
             catch (System.Exception ex)
             {

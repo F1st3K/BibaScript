@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SyntaxBibaScript
 {
@@ -34,6 +35,12 @@ namespace SyntaxBibaScript
         }
 
         public bool TryGetValue(SpecialWords key, out string value) => _dictionary.TryGetValue(key, out value);
+
+        public bool TryGetKey(string value, out SpecialWords key)
+        {
+            key = _dictionary.Where(x => x.Value == value).FirstOrDefault().Key;
+            return _dictionary.ContainsValue(value);
+        }
 
         public bool ContainsKey(SpecialWords key) => _dictionary.ContainsKey(key);
 

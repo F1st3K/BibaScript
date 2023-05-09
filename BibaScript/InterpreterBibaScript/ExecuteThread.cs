@@ -10,8 +10,11 @@ namespace InterpreterBibaScript
         private readonly string _continueCode;
         private readonly string _endCode;
 
-        public ExecuteThread()
+        private string[] _commands;
+
+        public ExecuteThread(string[] commands)
         {
+            _commands = commands;
             //Try get syntax instruction with library
             if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndInstruction, out _endString) == false)
                 throw new System.Exception("No such end instruction syntax");
@@ -24,35 +27,34 @@ namespace InterpreterBibaScript
         }
 
         //This cycle run separate code on block commands and run execute for one command
-        public void PeformBlockCommand(string[] commands)
+        public void PeformBlockCommand()
         {
-            var execute = new ExecuteInstruction();
-            for (int i = 0; i < commands.Length; )
+            for (int i = 0; i < _commands.Length; )
             {
                 var cmds = new List<string>();
-                if (commands[i] == _beginCode)
+                if (_commands[i] == _beginCode)
                 {
                     //Such block command and run new thread
                     var count = 0;
                     do
                     {
-                        if (commands[i] == _beginCode)
+                        if (_commands[i] == _beginCode)
                             count++;
-                        if (commands[i] == _endCode)
+                        if (_commands[i] == _endCode)
                             count--;
                         if (count < 0)
                             throw new System.Exception("Invalid code separator " + i);
-                        if (i >= commands.Length)
+                        if (i >= _commands.Length)
                             throw new System.Exception("Non such end command " + i);
-                        cmds.Add(commands[i]);
+                        cmds.Add(_commands[i]);
                         i++;
                     }
                     while (count != 0);
                     cmds.RemoveAt(0);
                     cmds.RemoveAt(cmds.Count - 1);
                     var values = Memory.GetInstance().GetAllNames();
-                    new ExecuteThread().PeformBlockCommand(cmds.ToArray());
-                    Memory.GetInstance().RemoveWithout(values);
+                    new ExecuteThread(cmds.ToArray()).PeformBlockCommand();
+                    Memory.GetInstance().RemoveWithout(values.ToArray());
                     continue;
                 }
                 //Such and run command
@@ -60,29 +62,29 @@ namespace InterpreterBibaScript
                 {
                     var mode = false;
                     var countBaket = 0;
-                    if (commands[i] == _continueCode)
+                    if (_commands[i] == _continueCode)
                         i++;
                     do
                     {
-                        if (commands[i] == _beginCode && countBaket == 0)
+                        if (_commands[i] == _beginCode && countBaket == 0)
                             mode = true;
-                        if (commands[i] == _beginCode)
+                        if (_commands[i] == _beginCode)
                             countBaket++;
-                        if (commands[i] == _endCode)
+                        if (_commands[i] == _endCode)
                             countBaket--;
                         if (countBaket < 0)
                             throw new System.Exception("Invalid code separator " + i);
-                        if (i >= commands.Length)
+                        if (i >= _commands.Length)
                             throw new System.Exception("Non such end command " + i);
-                        cmds.Add(commands[i]);
+                        cmds.Add(_commands[i]);
                         i++;
                     }
-                    while (mode ? countBaket != 0 : commands[i - 1] != _endString);
-                    if (i >= commands.Length)
+                    while (mode ? countBaket != 0 : _commands[i - 1] != _endString);
+                    if (i >= _commands.Length)
                         break;
                 }
-                while (commands[i] == _continueCode);
-                execute.PeformCommand(cmds.ToArray());
+                while (_commands[i] == _continueCode);
+                new ExecuteInstruction(cmds.ToArray()).PeformCommand();
             }
         }
     }

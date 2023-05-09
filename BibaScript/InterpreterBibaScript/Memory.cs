@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SyntaxBibaScript;
+using System;
+using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
@@ -32,7 +34,7 @@ namespace InterpreterBibaScript
             Functions = new Dictionary<string, string[]>();
         }
 
-        public string[] GetAllNames()
+        public List<string> GetAllNames()
         {
             var list = new List<string>();
             foreach (var item in Integers)
@@ -45,7 +47,68 @@ namespace InterpreterBibaScript
                 list.Add(item.Key);
             foreach (var item in Functions)
                 list.Add(item.Key);
-            return list.ToArray();
+            return list;
+        }
+
+        public void DeclareVariable(SpecialWords type, string name)
+        {
+            if (GetAllNames().Contains(name))
+                throw new Exception("Variable with current name does exist");
+            switch (type)
+            {
+                case SpecialWords.TypeInteger:
+                    Integers.Add(name, 0);
+                    break;
+                case SpecialWords.TypeString:
+                    Strings.Add(name, string.Empty);
+                    break;
+                case SpecialWords.TypeFloat:
+                    Floats.Add(name, 0);
+                    break;
+                case SpecialWords.TypeBoolean:
+                    Booleans.Add(name, false);
+                    break;
+                default:
+                    throw new Exception("Invalid type");
+            }
+        }
+
+        public void AssignVariable(string name, string value)
+        {
+            if (Integers.ContainsKey(name))
+            {
+                if (int.TryParse(value, out var num))
+                    Integers[name] = num;
+                else throw new Exception("Invalid integer value");
+                return;
+            }
+            if (Strings.ContainsKey(name))
+            {
+                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.SeparatorString, out var regix);
+                if (value.StartsWith(regix) && value.EndsWith(regix))
+                    Strings[name] = value.Substring(1, value.Length - 1);
+                else throw new Exception("Invalid string value");
+                return;
+            }
+            if (Floats.ContainsKey(name))
+            {
+                if (float.TryParse(value, out var num))
+                    Floats[name] = num;
+                else throw new Exception("Invalid float value");
+                return;
+            }
+            if (Booleans.ContainsKey(name))
+            {
+                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out var False);
+                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var True);
+                if (value == True)
+                    Booleans[name] = true;
+                else if (value == False)
+                    Booleans[name] = false;
+                else throw new Exception("Invalid Bolean value");
+                return;
+            }
+            throw new Exception("Variable with current name does not exist");
         }
 
         public void RemoveWithout(string[] values)
