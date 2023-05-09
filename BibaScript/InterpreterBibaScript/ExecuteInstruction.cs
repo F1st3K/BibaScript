@@ -29,7 +29,7 @@ namespace InterpreterBibaScript
         {
             CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
             Memory.GetInstance().DeclareVariable(type, _command[1]);
-            if (_command.Length > 3)
+            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.Assign, out var assign) && _command[2] == assign)
             {
                 var list = new List<string>(_command);
                 list.RemoveAt(0);
@@ -41,7 +41,8 @@ namespace InterpreterBibaScript
         private void AssignVariable()
         {
             string value = "0";
-            Memory.GetInstance().AssignVariable(_command[0], value);
+            Memory.GetInstance().SetVariable(_command[0], value);
         }
+
     }
 }

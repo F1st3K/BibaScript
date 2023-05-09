@@ -15,6 +15,9 @@ namespace InterpreterBibaScript
             return _instance;
         }
 
+        private string _true;
+        private string _false;
+
         public Dictionary<string, int> Integers { get; }
 
         public Dictionary<string, float> Floats { get; }
@@ -32,6 +35,10 @@ namespace InterpreterBibaScript
             Strings = new Dictionary<string, string>();
             Booleans = new Dictionary<string, bool>();
             Functions = new Dictionary<string, string[]>();
+            if (CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out _false) == false)
+                throw new Exception("Non such value false");
+            if (CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out _true) == false)
+                throw new Exception("Non such value true");
         }
 
         public List<string> GetAllNames()
@@ -53,7 +60,7 @@ namespace InterpreterBibaScript
         public void DeclareVariable(SpecialWords type, string name)
         {
             if (GetAllNames().Contains(name))
-                throw new Exception("Variable with current name does exist");
+                throw new Exception("Variable: " + name + " does exist");
             switch (type)
             {
                 case SpecialWords.TypeInteger:
@@ -73,13 +80,13 @@ namespace InterpreterBibaScript
             }
         }
 
-        public void AssignVariable(string name, string value)
+        public void SetVariable(string name, string value)
         {
             if (Integers.ContainsKey(name))
             {
                 if (int.TryParse(value, out var num))
                     Integers[name] = num;
-                else throw new Exception("Invalid integer value");
+                else throw new Exception("Invalid integer value: " + value);
                 return;
             }
             if (Strings.ContainsKey(name))
@@ -87,28 +94,52 @@ namespace InterpreterBibaScript
                 CodeTypeWords.GetInstance().TryGetValue(SpecialWords.SeparatorString, out var regix);
                 if (value.StartsWith(regix) && value.EndsWith(regix))
                     Strings[name] = value.Substring(1, value.Length - 1);
-                else throw new Exception("Invalid string value");
+                else throw new Exception("Invalid string value: " + value);
                 return;
             }
             if (Floats.ContainsKey(name))
             {
                 if (float.TryParse(value, out var num))
                     Floats[name] = num;
-                else throw new Exception("Invalid float value");
+                else throw new Exception("Invalid float value: " + value);
                 return;
             }
             if (Booleans.ContainsKey(name))
             {
-                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out var False);
-                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var True);
-                if (value == True)
+                if (value == _true)
                     Booleans[name] = true;
-                else if (value == False)
+                else if (value == _false)
                     Booleans[name] = false;
-                else throw new Exception("Invalid Bolean value");
+                else throw new Exception("Invalid Bolean value: " + value);
                 return;
             }
-            throw new Exception("Variable with current name does not exist");
+            throw new Exception("Variable: "+name+" does not exist");
+        }
+
+        public string GetVariable(string name)
+        {
+            if (Integers.TryGetValue(name, out var valueInt))
+                return valueInt.ToString();
+            if (Strings.TryGetValue(name, out var valueStr))
+                return "\""+valueStr +"\"";
+            if (Floats.TryGetValue(name, out var valueFloat))
+                return valueFloat.ToString();
+            if (Booleans.TryGetValue(name, out var valueBool))
+                return valueBool ? _true : _false;
+            throw new Exception("No such variable: " + name);
+        }
+
+        public SpecialWords GetType(string name)
+        {
+            if (Integers.ContainsKey(name))
+                return SpecialWords.TypeInteger;
+            if (Strings.ContainsKey(name))
+                return SpecialWords.TypeString;
+            if (Floats.ContainsKey(name))
+                return SpecialWords.TypeFloat;
+            if (Booleans.ContainsKey(name))
+                return SpecialWords.TypeBoolean;
+            throw new Exception("No such variable: " + name);
         }
 
         public void RemoveWithout(string[] values)
