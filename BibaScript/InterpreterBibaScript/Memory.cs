@@ -93,7 +93,7 @@ namespace InterpreterBibaScript
             {
                 CodeTypeWords.GetInstance().TryGetValue(SpecialWords.SeparatorString, out var regix);
                 if (value.StartsWith(regix) && value.EndsWith(regix))
-                    Strings[name] = value.Substring(1, value.Length - 1);
+                    Strings[name] = value.Substring(1, value.Length - 2);
                 else throw new Exception("Invalid string value: " + value);
                 return;
             }

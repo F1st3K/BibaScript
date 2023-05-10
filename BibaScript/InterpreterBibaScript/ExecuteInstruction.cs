@@ -17,12 +17,13 @@ namespace InterpreterBibaScript
         //This method run command
         public void PeformCommand()
         {
+            var m = Memory.GetInstance();
             View.ColorWriteLine(_command[0], System.ConsoleColor.Yellow);
             if (CodeTypes.GetInstance().ContainsValue(_command[0]))
-            {
                 DeclareVariable();
-                return;
-            }
+            else if (Memory.GetInstance().GetAllNames().Contains(_command[0]))
+                if (Memory.GetInstance().Functions.ContainsKey(_command[0]) == false)
+                    AssignVariable();
         }
 
         private void DeclareVariable()
@@ -61,7 +62,6 @@ namespace InterpreterBibaScript
             var list = new List<string>(_command);
             list.RemoveRange(0, 2);
             list.RemoveAt(list.Count - 1);
-            var m = Memory.GetInstance();
             string value = Comber.Calculate(Memory.GetInstance().GetVariableType(_command[0]), list.ToArray());
             Memory.GetInstance().SetVariable(_command[0], value);
         }

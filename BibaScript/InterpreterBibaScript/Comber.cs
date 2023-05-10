@@ -37,13 +37,15 @@ namespace InterpreterBibaScript
                 }
                 list.Add(expr[i]);
             }
+            if (countS != 0)
+                throw new Exception("Invalid string separator: " + temp);
             //Run calculate
             switch (type)
             {
                 case Types.Integer:
                     return CalculateInt(list.ToArray());
                 case Types.String:
-                    return CalculateStr(list.ToArray());
+                    return s+CalculateStr(list.ToArray())+s;
                 case Types.Float:
                     return CalculateFloat(list.ToArray());
                 case Types.Boolean:
@@ -51,14 +53,16 @@ namespace InterpreterBibaScript
                 default:
                     break;
             }
-            throw new Exception("Invalid type");
+            throw new Exception("Invalid type: " + type.ToString());
         }
 
+        //Calculate boolean type
         private static string CalculateBool(string[] expr)
         {
             throw new NotImplementedException();
         }
 
+        //Calculate float type
         private static string CalculateFloat(string[] expr)
         {
             string expression = string.Empty;
@@ -71,24 +75,31 @@ namespace InterpreterBibaScript
                 if (Operations.Contains(element))
                     expression += element;
                 else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    switch (Memory.GetInstance().GetVariableType(element))
+                    try
                     {
-                        case Types.Integer:
-                            expression += Convert.ToSingle(Memory.GetInstance().GetVariable(element)).ToString();
-                            break;
-                        case Types.String:
-                            var s = Memory.GetInstance().GetVariable(element);
-                            expression += Convert.ToSingle(s.Substring(1, s.Length - 1)).ToString();
-                            break;
-                        case Types.Float:
-                            expression += Memory.GetInstance().GetVariable(element);
-                            break;
-                        case Types.Boolean:
-                            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var v);
-                            expression += Memory.GetInstance().GetVariable(element) == v ? 1 : 0;
-                            break;
-                        default:
-                            break;
+                        switch (Memory.GetInstance().GetVariableType(element))
+                        {
+                            case Types.Integer:
+                                expression += Memory.GetInstance().GetVariable(element).ToString();
+                                break;
+                            case Types.String:
+                                var s = Memory.GetInstance().GetVariable(element);
+                                expression += Convert.ToSingle(s.Substring(1, s.Length - 2)).ToString();
+                                break;
+                            case Types.Float:
+                                expression += Memory.GetInstance().GetVariable(element).ToString();
+                                break;
+                            case Types.Boolean:
+                                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var v);
+                                expression += Memory.GetInstance().GetVariable(element) == v ? 1 : 0;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
                     }
                 else if (int.TryParse(element, out var intNum))
                     expression += intNum.ToString();
@@ -104,11 +115,70 @@ namespace InterpreterBibaScript
             return Convert.ToSingle(calculator.Result).ToString();
         }
 
+        //Calculate string type
         private static string CalculateStr(string[] expr)
         {
-            throw new NotImplementedException();
+            var expression = new List<string>();
+            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var vt);
+            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out var vf);
+            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.SeparatorString, out var s);
+
+            foreach (var element in expr)
+            {
+                if (element == Operations[0])
+                    expression.Add(element);
+                else if (Memory.GetInstance().GetAllNames().Contains(element))
+                    try
+                    {
+                        switch (Memory.GetInstance().GetVariableType(element))
+                        {
+                            case Types.Integer:
+                                expression.Add(Memory.GetInstance().GetVariable(element));
+                                break;
+                            case Types.String:
+                                var v = Memory.GetInstance().GetVariable(element);
+                                expression.Add(v.Substring(1, v.Length - 2));
+                                break;
+                            case Types.Float:
+                                expression.Add(Memory.GetInstance().GetVariable(element));
+                                break;
+                            case Types.Boolean:
+                                expression.Add(Memory.GetInstance().GetVariable(element));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
+                    }
+                else if (int.TryParse(element, out var intNum))
+                    expression.Add(intNum.ToString());
+                else if (float.TryParse(element, out var fNum))
+                    expression.Add(fNum.ToString());
+                else if (element == vt)
+                    expression.Add(vt);
+                else if (element == vf)
+                    expression.Add(vf);
+                else if (element.StartsWith(s) && element.EndsWith(s))
+                    expression.Add(element.Substring(1, element.Length - 2));
+                else throw new Exception("Invalid value: " + element);
+            }
+            var result = string.Empty;
+            var isOperand = false;
+            foreach (var op in expression)
+            {
+                if (isOperand == false)
+                    result += op;
+                isOperand = !isOperand;
+            }
+            if (isOperand == false)
+                throw new Exception("Invalid operand: +:" + result);
+            return result;
         }
 
+        //Calculate integer type
         private static string CalculateInt(string[] expr)
         {
             string expression = string.Empty;
@@ -121,23 +191,30 @@ namespace InterpreterBibaScript
                 if (Operations.Contains(element))
                     expression += element;
                 else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    switch (Memory.GetInstance().GetVariableType(element))
+                    try
                     {
-                        case Types.Integer:
-                            expression += Memory.GetInstance().GetVariable(element);
-                            break;
-                        case Types.String:
-                            var s = Memory.GetInstance().GetVariable(element);
-                            expression += Convert.ToInt32(s.Substring(1, s.Length - 1)).ToString();
-                            break;
-                        case Types.Float:
-                            expression += Convert.ToInt32(Memory.GetInstance().GetVariable(element)).ToString();
-                            break;
-                        case Types.Boolean:
-                            expression += Memory.GetInstance().GetVariable(element) == vt ? 1 : 0;
-                            break;
-                        default:
-                            break;
+                        switch (Memory.GetInstance().GetVariableType(element))
+                        {
+                            case Types.Integer:
+                                expression += Memory.GetInstance().GetVariable(element);
+                                break;
+                            case Types.String:
+                                var s = Memory.GetInstance().GetVariable(element);
+                                expression += Convert.ToInt32(s.Substring(1, s.Length - 2)).ToString();
+                                break;
+                            case Types.Float:
+                                expression += Memory.GetInstance().GetVariable(element).ToString();
+                                break;
+                            case Types.Boolean:
+                                expression += Memory.GetInstance().GetVariable(element) == vt ? 1 : 0;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
                     }
                 else if (int.TryParse(element, out var intNum))
                     expression += intNum.ToString();
@@ -150,7 +227,7 @@ namespace InterpreterBibaScript
                 else throw new Exception("Invalid value: " + element);
             }
             calculator.Calculate(expression);
-            return Convert.ToInt32(calculator.Result).ToString();
+            return ((int)calculator.Result).ToString();
         }
     }
 }

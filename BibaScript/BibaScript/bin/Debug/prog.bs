@@ -3,7 +3,11 @@ main
 	int p;
 }
 {
-	float pivo = 5 / (4 + "45 - true");
+	int p;
+	string str = "34  " + "5";
+	float pivo = 5 + str / (4 + str + 45 - true);
+	p = 5 + 345 / (4 + 345 + 45 - 1);
+	int pv = pivo;
 	go
 	{
 		pivo - 5;
