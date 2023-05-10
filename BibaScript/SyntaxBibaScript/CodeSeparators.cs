@@ -20,6 +20,7 @@
             _dictionary.Add(SpecialWords.EndInstruction, ";");
             _dictionary.Add(SpecialWords.ContinueCode, ":");
             _dictionary.Add(SpecialWords.Assign, "=");
+            _dictionary.Add(SpecialWords.SeparatorString, "\"");
         }
     }
 }

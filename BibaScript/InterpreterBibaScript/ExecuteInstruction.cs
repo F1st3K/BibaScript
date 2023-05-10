@@ -28,7 +28,25 @@ namespace InterpreterBibaScript
         private void DeclareVariable()
         {
             CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
-            Memory.GetInstance().DeclareVariable(type, _command[1]);
+            Types t;
+            switch (type)
+            {
+                case SpecialWords.TypeInteger:
+                    t = Types.Integer;
+                    break;
+                case SpecialWords.TypeString:
+                    t = Types.String;
+                    break;
+                case SpecialWords.TypeFloat:
+                    t = Types.Float;
+                    break;
+                case SpecialWords.TypeBoolean:
+                    t = Types.Boolean;
+                    break;
+                default:
+                    throw new Exception("Invalid type " + type.ToString());
+            }
+            Memory.GetInstance().DeclareVariable(t, _command[1]);
             if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.Assign, out var assign) && _command[2] == assign)
             {
                 var list = new List<string>(_command);
@@ -40,7 +58,11 @@ namespace InterpreterBibaScript
 
         private void AssignVariable()
         {
-            string value = "0";
+            var list = new List<string>(_command);
+            list.RemoveRange(0, 2);
+            list.RemoveAt(list.Count - 1);
+            var m = Memory.GetInstance();
+            string value = Comber.Calculate(Memory.GetInstance().GetVariableType(_command[0]), list.ToArray());
             Memory.GetInstance().SetVariable(_command[0], value);
         }
 

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Calculator">
+      <HintPath>..\NumberCalculator\Calculator.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSExecutor.cs" />
+    <Compile Include="Comber.cs" />
     <Compile Include="ExecuteInstruction.cs" />
     <Compile Include="ExecuteThread.cs" />
     <Compile Include="Memory.cs" />

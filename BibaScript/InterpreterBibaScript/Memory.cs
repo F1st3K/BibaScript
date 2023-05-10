@@ -57,22 +57,22 @@ namespace InterpreterBibaScript
             return list;
         }
 
-        public void DeclareVariable(SpecialWords type, string name)
+        public void DeclareVariable(Types type, string name)
         {
             if (GetAllNames().Contains(name))
                 throw new Exception("Variable: " + name + " does exist");
             switch (type)
             {
-                case SpecialWords.TypeInteger:
+                case Types.Integer:
                     Integers.Add(name, 0);
                     break;
-                case SpecialWords.TypeString:
+                case Types.String:
                     Strings.Add(name, string.Empty);
                     break;
-                case SpecialWords.TypeFloat:
+                case Types.Float:
                     Floats.Add(name, 0);
                     break;
-                case SpecialWords.TypeBoolean:
+                case Types.Boolean:
                     Booleans.Add(name, false);
                     break;
                 default:
@@ -129,16 +129,16 @@ namespace InterpreterBibaScript
             throw new Exception("No such variable: " + name);
         }
 
-        public SpecialWords GetType(string name)
+        public Types GetVariableType(string name)
         {
             if (Integers.ContainsKey(name))
-                return SpecialWords.TypeInteger;
+                return Types.Integer;
             if (Strings.ContainsKey(name))
-                return SpecialWords.TypeString;
+                return Types.String;
             if (Floats.ContainsKey(name))
-                return SpecialWords.TypeFloat;
+                return Types.Float;
             if (Booleans.ContainsKey(name))
-                return SpecialWords.TypeBoolean;
+                return Types.Boolean;
             throw new Exception("No such variable: " + name);
         }
 

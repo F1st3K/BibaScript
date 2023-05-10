@@ -3,7 +3,7 @@ main
 	int p;
 }
 {
-	int pivo = 5;
+	float pivo = 5 / (4 + "45 - true");
 	go
 	{
 		pivo - 5;
