@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CodeConstructions.cs" />
     <Compile Include="CodeDictionary.cs" />
+    <Compile Include="CodeOperators.cs" />
     <Compile Include="CodeSeparators.cs" />
     <Compile Include="CodeTypes.cs" />
     <Compile Include="CodeTypeWords.cs" />

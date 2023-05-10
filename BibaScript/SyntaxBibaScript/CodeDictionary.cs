@@ -34,6 +34,8 @@ namespace SyntaxBibaScript
             set { }
         }
 
+        public string GetValue(SpecialWords key) => _dictionary[key];
+
         public bool TryGetValue(SpecialWords key, out string value) => _dictionary.TryGetValue(key, out value);
 
         public bool TryGetKey(string value, out SpecialWords key)

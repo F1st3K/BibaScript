@@ -17,7 +17,6 @@ namespace InterpreterBibaScript
         //This method run command
         public void PeformCommand()
         {
-            var m = Memory.GetInstance();
             View.ColorWriteLine(_command[0], System.ConsoleColor.Yellow);
             if (CodeTypes.GetInstance().ContainsValue(_command[0]))
                 DeclareVariable();

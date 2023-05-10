@@ -15,15 +15,10 @@ namespace InterpreterBibaScript
         public ExecuteThread(string[] commands)
         {
             _commands = commands;
-            //Try get syntax instruction with library
-            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndInstruction, out _endString) == false)
-                throw new System.Exception("No such end instruction syntax");
-            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.BeginCode, out _beginCode) == false)
-                throw new System.Exception("No such begin code syntax");
-            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.EndCode, out _endCode) == false)
-                throw new System.Exception("No such end code syntax");
-            if (CodeSeparators.GetInstance().TryGetValue(SpecialWords.ContinueCode, out _continueCode) == false)
-                throw new System.Exception("No such continue code syntax");
+            _endString = CodeSeparators.GetInstance().GetValue(SpecialWords.EndInstruction);
+            _beginCode = CodeSeparators.GetInstance().GetValue(SpecialWords.BeginCode);
+            _continueCode = CodeSeparators.GetInstance().GetValue(SpecialWords.ContinueCode);
+            _endCode = CodeSeparators.GetInstance().GetValue(SpecialWords.EndCode);
         }
 
         //This cycle run separate code on block commands and run execute for one command

@@ -14,7 +14,7 @@ namespace InterpreterBibaScript
         {
             //Get useless strings
             EmptySeparators = empty;
-            CodeSeparators.GetInstance().TryGetValue(SpecialWords.SeparatorString, out _strSeparator);
+            _strSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorString);
         }
 
         //This method separate use without useless

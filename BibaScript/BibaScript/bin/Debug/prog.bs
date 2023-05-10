@@ -6,7 +6,7 @@ main
 	int p;
 	string str = "34  " + "5";
 	float pivo = 5 + str / (4 + str + 45 - true);
-	p = 5 + 345 / (4 + 345 + 45 - 1);
+	bool up = "true";
 	int pv = pivo;
 	bool b1 = true && ! false;
 	go

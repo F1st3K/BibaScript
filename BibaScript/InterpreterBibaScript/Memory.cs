@@ -17,6 +17,7 @@ namespace InterpreterBibaScript
 
         private string _true;
         private string _false;
+        private string _separatorStr;
 
         public Dictionary<string, int> Integers { get; }
 
@@ -35,10 +36,9 @@ namespace InterpreterBibaScript
             Strings = new Dictionary<string, string>();
             Booleans = new Dictionary<string, bool>();
             Functions = new Dictionary<string, string[]>();
-            if (CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out _false) == false)
-                throw new Exception("Non such value false");
-            if (CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out _true) == false)
-                throw new Exception("Non such value true");
+            _true = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            _false = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
+            _separatorStr = CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString);
         }
 
         public List<string> GetAllNames()
@@ -91,8 +91,7 @@ namespace InterpreterBibaScript
             }
             if (Strings.ContainsKey(name))
             {
-                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.SeparatorString, out var regix);
-                if (value.StartsWith(regix) && value.EndsWith(regix))
+                if (value.StartsWith(_separatorStr) && value.EndsWith(_separatorStr))
                     Strings[name] = value.Substring(1, value.Length - 2);
                 else throw new Exception("Invalid string value: " + value);
                 return;
@@ -121,7 +120,7 @@ namespace InterpreterBibaScript
             if (Integers.TryGetValue(name, out var valueInt))
                 return valueInt.ToString();
             if (Strings.TryGetValue(name, out var valueStr))
-                return "\""+valueStr +"\"";
+                return _separatorStr + valueStr + _separatorStr;
             if (Floats.TryGetValue(name, out var valueFloat))
                 return valueFloat.ToString();
             if (Booleans.TryGetValue(name, out var valueBool))
