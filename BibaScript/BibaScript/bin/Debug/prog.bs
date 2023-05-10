@@ -8,6 +8,7 @@ main
 	float pivo = 5 + str / (4 + str + 45 - true);
 	p = 5 + 345 / (4 + 345 + 45 - 1);
 	int pv = pivo;
+	bool b1 = true && ! false;
 	go
 	{
 		pivo - 5;

@@ -9,7 +9,14 @@ namespace InterpreterBibaScript
     {
         public readonly static List<string> Operations = new List<string>()
         {
-            "+", "-", "/", "*", "^", ")", "("
+            "+", "-", "/", "*", "^", ")", "(", "~"
+        };
+
+        public readonly static Dictionary<string, string> Logics = new Dictionary<string, string>()
+        {
+            { "&&", Operations[0]},
+            { "||", Operations[3]},
+            { "!", Operations[7]},
         };
 
         public static string Calculate(Types type, string[] expr)
@@ -59,7 +66,75 @@ namespace InterpreterBibaScript
         //Calculate boolean type
         private static string CalculateBool(string[] expr)
         {
-            throw new NotImplementedException();
+            string expression = string.Empty;
+            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var vt);
+            CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueFalse, out var vf);
+            var calculator = new Calc();
+
+            foreach (var element in expr)
+            {
+                if (Logics.TryGetValue(element, out var el))
+                    expression += el;
+                else if (Memory.GetInstance().GetAllNames().Contains(element))
+                    try
+                    {
+                        switch (Memory.GetInstance().GetVariableType(element))
+                        {
+                            case Types.Integer:
+                                var i = Memory.GetInstance().GetVariable(element).ToString();
+                                if (i == "0" || i == "1")
+                                    expression += i == "0" ? "~1" : "1";
+                                else throw new Exception("No such conversion: " + element);
+                                break;
+                            case Types.String:
+                                var s = Memory.GetInstance().GetVariable(element);
+                                s = Convert.ToSingle(s.Substring(1, s.Length - 2)).ToString();
+                                if (s == vf || s == vt)
+                                    expression += s == "false" ?"~1" : "1";
+                                else throw new Exception("No such conversion: " + element);
+                                break;
+                            case Types.Float:
+                                var f = ((int)Convert.ToSingle(Memory.GetInstance().GetVariable(element))).ToString();
+                                if (f == "0" || f == "1")
+                                    expression += f == "0" ? "~1" : "1";
+                                else throw new Exception("No such conversion: " + element);
+                                break;
+                            case Types.Boolean:
+                                var b = Memory.GetInstance().GetVariable(element);
+                                if (b == vf || b == vt)
+                                    expression += b == "false" ? "~1" : "1";
+                                else throw new Exception("No such conversion: " + element);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
+                    }
+                else if (int.TryParse(element, out var intNum))
+                {
+                    var i = intNum.ToString();
+                    if (i == "0" || i == "1")
+                        expression += i == "0" ? "~1" : "1";
+                    else throw new Exception("No such conversion: " + element);
+                }
+                else if (float.TryParse(element, out var fNum))
+                {
+                    var f = fNum.ToString();
+                    if (f == "0" || f == "1")
+                        expression += f == "0" ? "~1" : "1";
+                    else throw new Exception("No such conversion: " + element);
+                }
+                else if (element == vt)
+                    expression += "1";
+                else if (element == vf)
+                    expression += "~1";
+                else throw new Exception("Invalid value: " + element);
+            }
+            calculator.Calculate(expression);
+            return calculator.Result <= 0 ? vf : vt;
         }
 
         //Calculate float type
