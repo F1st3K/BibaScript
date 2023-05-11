@@ -48,6 +48,7 @@
     <Compile Include="Comber.cs" />
     <Compile Include="ExecuteInstruction.cs" />
     <Compile Include="ExecuteThread.cs" />
+    <Compile Include="Funcition.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

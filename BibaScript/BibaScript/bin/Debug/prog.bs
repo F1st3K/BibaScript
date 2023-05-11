@@ -1,5 +1,5 @@
-int i = 10;
-float pivo = 300;
+int i = ;
+float pivo = 300.04;
 bool t = true;
 while (t)
 {

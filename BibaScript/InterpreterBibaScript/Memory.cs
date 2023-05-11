@@ -27,7 +27,9 @@ namespace InterpreterBibaScript
 
         public Dictionary<string, bool> Booleans { get; }
 
-        public Dictionary<string, string[]> Functions { get; }
+        public Dictionary<string, Function> Functions { get; }
+
+        public Dictionary<string, ExecuteThread> Procedures { get; }
 
         public Memory()
         {
@@ -35,7 +37,8 @@ namespace InterpreterBibaScript
             Floats = new Dictionary<string, float>();
             Strings = new Dictionary<string, string>();
             Booleans = new Dictionary<string, bool>();
-            Functions = new Dictionary<string, string[]>();
+            Functions = new Dictionary<string, Function>();
+            Procedures = new Dictionary<string, ExecuteThread>();
             _true = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
             _false = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
             _separatorStr = CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString);
@@ -54,7 +57,33 @@ namespace InterpreterBibaScript
                 list.Add(item.Key);
             foreach (var item in Functions)
                 list.Add(item.Key);
+            foreach (var item in Procedures)
+                list.Add(item.Key);
             return list;
+        }
+
+        public void DeclareFunction(Types outType, string name, string[] command)
+        {
+            Functions.Add(name, new Function(outType, command));
+        }
+
+        public void DeclareFunction(string name, string[] command)
+        {
+            Procedures.Add(name, new ExecuteThread(command));
+        }
+
+        public void RunFunction(string name, out string result)
+        {
+            if (Functions.TryGetValue(name, out var func))
+                result = func.Run();
+            else throw new Exception("Function: " + name + " does exist");
+        }
+
+        public void RunFunction(string name)
+        {
+            if (Procedures.TryGetValue(name, out var proc))
+                proc.PeformBlockCommand();
+            else throw new Exception("Procedure: " + name + " does exist");
         }
 
         public void DeclareVariable(Types type, string name)
@@ -169,6 +198,11 @@ namespace InterpreterBibaScript
             foreach (var item in functions)
                 if (list.Contains(item) == false)
                     Functions.Remove(item);
+            var procedures = new string[Procedures.Keys.Count];
+            Procedures.Keys.CopyTo(procedures, 0);
+            foreach (var item in procedures)
+                if (list.Contains(item) == false)
+                    Procedures.Remove(item);
         }
     }
 }

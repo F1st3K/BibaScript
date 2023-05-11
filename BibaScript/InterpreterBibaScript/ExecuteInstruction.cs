@@ -78,12 +78,24 @@ namespace InterpreterBibaScript
             else if (Memory.GetInstance().GetAllNames().Contains(_command[0]))
                 if (Memory.GetInstance().Functions.ContainsKey(_command[0]))
                     CallFunction();
+                else if (Memory.GetInstance().Procedures.ContainsKey(_command[0]))
+                    CallProcedure();
                 else AssignVariable();
             else if (_command[0] == _constIf)
                 RunIfOperator();
             else if (_command[0] == _constWhile)
                 RunWhileOperator();
-            else throw new Exception("No such instruction or name: "+_command[0]);
+            else throw new Exception("No such instruction or name: " + _command[0]);
+        }
+
+        private void CallProcedure()
+        {
+            Memory.GetInstance().RunFunction(_command[0]);
+        }
+
+        private void CallFunction()
+        {
+            Memory.GetInstance().RunFunction(_command[0], out var result);
         }
 
         private void RunWhileOperator()
@@ -104,11 +116,6 @@ namespace InterpreterBibaScript
             }
         }
 
-
-        private void CallFunction()
-        {
-            
-        }
 
         private void RunIfOperator()
         {

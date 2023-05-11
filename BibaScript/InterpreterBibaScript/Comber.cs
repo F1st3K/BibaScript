@@ -43,6 +43,8 @@ namespace InterpreterBibaScript
         //Run calculate
         public static string Calculate(Types type, string[] expr)
         {
+            if (expr.Length <= 0)
+                throw new Exception("Value is not find");
             switch (type)
             {
                 case Types.Integer:
@@ -199,7 +201,7 @@ namespace InterpreterBibaScript
                     }
                 else if (int.TryParse(element, out var intNum))
                     expression += intNum.ToString();
-                else if (float.TryParse(element, out var fNum))
+                else if (float.TryParse(element.Replace('.', ','), out var fNum))
                     expression += fNum.ToString();
                 else if (element == ValueTrue)
                     expression += 1;
