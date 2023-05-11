@@ -7,6 +7,7 @@
         ContinueCode,
         BeginParameters,
         EndParameters,
+        SeparatorParameters,
         EndInstruction,
         Assign,
         SeparatorString,

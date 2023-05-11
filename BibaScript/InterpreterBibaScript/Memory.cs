@@ -62,9 +62,9 @@ namespace InterpreterBibaScript
             return list;
         }
 
-        public void DeclareFunction(Types outType, string name, string[] command)
+        public void DeclareFunction(Types outType, string name, string[] command, params Parameter[] parameters)
         {
-            Functions.Add(name, new Function(outType, command));
+            Functions.Add(name, new Function(outType, command, parameters));
         }
 
         public void DeclareFunction(string name, string[] command)
@@ -72,10 +72,10 @@ namespace InterpreterBibaScript
             Procedures.Add(name, new ExecuteThread(command));
         }
 
-        public void RunFunction(string name, out string result)
+        public void RunFunction(string name, out string result, params string[] values)
         {
             if (Functions.TryGetValue(name, out var func))
-                result = func.Run();
+                result = func.Run(values);
             else throw new Exception("Function: " + name + " does exist");
         }
 

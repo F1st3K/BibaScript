@@ -1,4 +1,4 @@
-int i = ;
+int i = 5
 float pivo = 300.04;
 bool t = true;
 while (t)

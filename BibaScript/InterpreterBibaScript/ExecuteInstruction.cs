@@ -17,6 +17,8 @@ namespace InterpreterBibaScript
         private string _constIf;
         private string _constElse;
         private string _constWhile;
+        private string _constFunc;
+        private string _paramSeparator;
 
         public static string[] FindBlock(int i, string[] mass, string begin, string end, out int endParam)
         {
@@ -67,6 +69,8 @@ namespace InterpreterBibaScript
             _constIf = CodeConstructions.GetInstance().GetValue(SpecialWords.ConstructionIf);
             _constElse = CodeConstructions.GetInstance().GetValue(SpecialWords.ConstructionElse);
             _constWhile = CodeConstructions.GetInstance().GetValue(SpecialWords.ConstructionWhile);
+            _paramSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorParameters);
+            _constFunc = CodeTypeWords.GetInstance().GetValue(SpecialWords.DeclarationFunction);
         }
 
         //This method run command
@@ -85,7 +89,22 @@ namespace InterpreterBibaScript
                 RunIfOperator();
             else if (_command[0] == _constWhile)
                 RunWhileOperator();
+            else if (_command[0] == _constFunc)
+                DeclareFunction();
             else throw new Exception("No such instruction or name: " + _command[0]);
+        }
+
+        private void DeclareFunction()
+        {
+            CodeTypeWords.GetInstance().TryGetKey(_command[1], out var wordType);
+            var name = _command[2];
+            var blockParam = FindBlock(3, _command, _beginParam, _endParam, out var i);
+            var blockCommand = FindBlock(i, _command, _beginCode, _endCode, out i);
+            if (wordType == SpecialWords.ValueVoid)
+            {
+                Memory.GetInstance().DeclareFunction(name, blockCommand);
+                return;
+            }    
         }
 
         private void CallProcedure()
@@ -93,14 +112,23 @@ namespace InterpreterBibaScript
             Memory.GetInstance().RunFunction(_command[0]);
         }
 
-        private void CallFunction()
+        private string CallFunction()
         {
-            Memory.GetInstance().RunFunction(_command[0], out var result);
+            if (Memory.GetInstance().Functions.TryGetValue(_command[0], out var func) == false)
+                throw new Exception("No such function: " + _command[0]);
+            var values = new List<string>();
+            var blockParam = FindBlock(1, _command, _beginParam, _endParam, out var i);
+            int k = 1;
+            foreach (var p in func.Parameters)
+            {
+                values.Add(Comber.Calculate(p.Type, FindInstruction(k, blockParam, _paramSeparator, out k)));
+            }
+            Memory.GetInstance().RunFunction(_command[0], out var result, values.ToArray());
+            return result;
         }
 
         private void RunWhileOperator()
         {
-            
             while (true)
             {
                 int i = 1;
