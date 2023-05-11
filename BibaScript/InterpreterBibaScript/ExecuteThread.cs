@@ -24,6 +24,7 @@ namespace InterpreterBibaScript
         //This cycle run separate code on block commands and run execute for one command
         public void PeformBlockCommand()
         {
+            var values = Memory.GetInstance().GetAllNames();
             for (int i = 0; i < _commands.Length; )
             {
                 var cmds = new List<string>();
@@ -47,9 +48,7 @@ namespace InterpreterBibaScript
                     while (count != 0);
                     cmds.RemoveAt(0);
                     cmds.RemoveAt(cmds.Count - 1);
-                    var values = Memory.GetInstance().GetAllNames();
                     new ExecuteThread(cmds.ToArray()).PeformBlockCommand();
-                    Memory.GetInstance().RemoveWithout(values.ToArray());
                     continue;
                 }
                 //Such and run command
@@ -81,6 +80,8 @@ namespace InterpreterBibaScript
                 while (_commands[i] == _continueCode);
                 new ExecuteInstruction(cmds.ToArray()).PeformCommand();
             }
+            var m = Memory.GetInstance();
+            Memory.GetInstance().RemoveWithout(values.ToArray());
         }
     }
 }
