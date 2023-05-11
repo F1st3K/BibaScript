@@ -1,6 +1,11 @@
 int i = 10;
 float pivo = 300;
-
+bool t = true;
+while (t)
+{
+	i = i + 1;
+	t = false;
+}
 if (false)
 {
 	i = i + 1;

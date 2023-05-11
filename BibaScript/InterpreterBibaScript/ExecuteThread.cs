@@ -39,11 +39,11 @@ namespace InterpreterBibaScript
                         if (_commands[i] == _endCode)
                             count--;
                         if (count < 0)
-                            throw new System.Exception("Invalid code separator " + i);
-                        if (i >= _commands.Length)
-                            throw new System.Exception("Non such end command " + i);
+                            throw new System.Exception("Invalid code separator " + _commands[i]);
                         cmds.Add(_commands[i]);
                         i++;
+                        if (i >= _commands.Length)
+                            throw new System.Exception("Non such end command " + _beginCode + " ... " + _commands[_commands.Length - 1]);
                     }
                     while (count != 0);
                     cmds.RemoveAt(0);
@@ -67,11 +67,11 @@ namespace InterpreterBibaScript
                         if (_commands[i] == _endCode)
                             countBaket--;
                         if (countBaket < 0)
-                            throw new System.Exception("Invalid code separator " + i);
-                        if (i >= _commands.Length)
-                            throw new System.Exception("Non such end command " + i);
+                            throw new System.Exception("Invalid code separator " + _commands[i]);
                         cmds.Add(_commands[i]);
                         i++;
+                        if (i > _commands.Length)
+                            throw new System.Exception("Non such end command " + _beginCode + " ... " + _commands[_commands.Length - 1]);
                     }
                     while (mode ? countBaket != 0 : _commands[i - 1] != _endString);
                     if (i >= _commands.Length)
