@@ -28,7 +28,7 @@ namespace InterpreterBibaScript
         private string[] ConvertParameters(string[] commands, string[] values)
         {
             var list = new List<string>();
-            var assign = CodeOperators.GetInstance().GetValue(SpecialWords.Assign);
+            var assign = CodeSeparators.GetInstance().GetValue(SpecialWords.Assign);
             var end = CodeSeparators.GetInstance().GetValue(SpecialWords.EndInstruction);
             for (int i = 0; i < values.Length; i++)
             {

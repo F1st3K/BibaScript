@@ -59,7 +59,11 @@ namespace InterpreterBibaScript
 
         private void DeclareFunction()
         {
-            CodeTypeWords.GetInstance().TryGetKey(_command[1], out var wordType);
+            SpecialWords wordType;
+            if (CodeTypeWords.GetInstance().TryGetKey(_command[1], out wordType)) ;
+            else if (CodeTypes.GetInstance().TryGetKey(_command[1], out wordType)) ;
+            else throw new Exception("Invalid type for declare function: " + _command[1]);
+
             var name = _command[2];
             var parameters = Parameter.ConvertToParameters(Code.FindBlock(3, _command, _beginParam, _endParam, out var i), _paramSeparator);
             var blockCommand = Code.FindBlock(i, _command, _beginCode, _endCode, out i);
@@ -68,41 +72,65 @@ namespace InterpreterBibaScript
                 Memory.GetInstance().DeclareFunction(name, blockCommand, parameters);
                 return;
             }
+            var returnType = Code.ConvertWordTypeToTypes(wordType);
+            Memory.GetInstance().DeclareFunction(returnType, name, blockCommand, parameters);
         }
 
         private void CallProcedure()
         {
-            if (Memory.GetInstance().Procedures.TryGetValue(_command[0], out var proc) == false)
-                throw new Exception("No such procedure: " + _command[0]);
-            var values = new List<string>();
-            var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
-            int k = 0;
-            foreach (var p in proc.Parameters)
+            try
             {
-                var parameter = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
-                if (parameter[parameter.Count - 1] == _paramSeparator)
-                    parameter.RemoveAt(parameter.Count - 1);
-                values.Add(Comber.Calculate(p.Type, parameter.ToArray()));
+                if (Memory.GetInstance().Procedures.TryGetValue(_command[0], out var proc) == false)
+                throw new Exception("No such procedure: " + _command[0]);
+                var values = new List<string>();
+                var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
+                int k = 0;
+                for (int countParam = 0; countParam < proc.Parameters.Length; countParam++)
+                {
+                    if (k >= blockParam.Length)
+                        throw new Exception("Less Parameters to Expect: " + _command[0] + _beginParam + proc.Parameters.Length + _endParam);
+                    var commands = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
+                    if (commands[commands.Count - 1] == _paramSeparator)
+                        commands.RemoveAt(commands.Count - 1);
+                    values.Add(Comber.Calculate(proc.Parameters[countParam].Type, commands.ToArray()));
+                }
+                if (k < blockParam.Length)
+                    throw new Exception("More Parameters to Expect: " + _command[0] + _beginParam + proc.Parameters.Length + _endParam);
+                Memory.GetInstance().RunFunction(_command[0], values.ToArray());
             }
-            Memory.GetInstance().RunFunction(_command[0], values.ToArray());
+            catch (Exception ex)
+            {
+                throw new Exception("Procedure: " + _command[0] + ": " + ex.Message);
+            }
         }
 
         private string CallFunction()
         {
-            if (Memory.GetInstance().Functions.TryGetValue(_command[0], out var func) == false)
-                throw new Exception("No such function: " + _command[0]);
-            var values = new List<string>();
-            var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
-            int k = 1;
-            foreach (var p in func.Parameters)
+            try
             {
-                var parameter = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
-                if (parameter[parameter.Count - 1] == _paramSeparator)
-                    parameter.RemoveAt(parameter.Count - 1);
-                values.Add(Comber.Calculate(p.Type, parameter.ToArray()));
+                if (Memory.GetInstance().Functions.TryGetValue(_command[0], out var func) == false)
+                throw new Exception("No such function: " + _command[0]);
+                var values = new List<string>();
+                var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
+                int k = 0;
+                for (int countParam = 0; countParam < func.Parameters.Length; countParam++)
+                {
+                    if (k >= blockParam.Length)
+                        throw new Exception("Less Parameters to Expect: " + _command[0] + _beginParam + func.Parameters.Length + _endParam);
+                    var commands = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
+                    if (commands[commands.Count - 1] == _paramSeparator)
+                        commands.RemoveAt(commands.Count - 1);
+                    values.Add(Comber.Calculate(func.Parameters[countParam].Type, commands.ToArray()));
+                }
+                if (k < blockParam.Length)
+                    throw new Exception("More Parameters to Expect: " + _command[0] + _beginParam + func.Parameters.Length + _endParam);
+                Memory.GetInstance().RunFunction(_command[0], out var result, values.ToArray());
+                return result;
             }
-            Memory.GetInstance().RunFunction(_command[0], out var result, values.ToArray());
-            return result;
+            catch (Exception ex)
+            {
+                throw new Exception("Function: " + _command[0] + ": " + ex.Message);
+            }
         }
 
         private void RunWhileOperator()

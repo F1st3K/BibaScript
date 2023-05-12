@@ -1,4 +1,4 @@
-func void Pivo(int i, float pivo)
+func void Pivo(idsfds i, float pivo)
 {
 	bool t = true;
 	while (t)
@@ -19,10 +19,11 @@ func void Pivo(int i, float pivo)
 		string gh = "3" + "34";
 		i = g + gh;
 	}
-	:else if ()
+	:else if (0)
 		i = 0;
 	:else
 		pivo = pivo - 1;
+	i = 1000;
 }
 
-Pivo(3 + 4, 3.5 - 1.3);	
+Pivo(4, 4 - 3.4344444444,);	

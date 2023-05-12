@@ -28,7 +28,7 @@ namespace InterpreterBibaScript
         public static string[] FindInstruction(int i, string[] mass, string end, out int endParam)
         {
             var expr = new List<string>();
-            do
+            while (i < mass.Length)
             {
                 expr.Add(mass[i]);
                 if (mass[i] == end)
@@ -37,7 +37,7 @@ namespace InterpreterBibaScript
                     break;
                 }
                 i++;
-            } while (i < mass.Length);
+            }
             endParam = i;
             return expr.ToArray();
         }
