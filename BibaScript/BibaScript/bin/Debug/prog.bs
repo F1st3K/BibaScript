@@ -1,4 +1,4 @@
-func void Pivo(int i, float pivo)
+func int Pivo(int i, float pivo)
 {
 	bool t = true;
 	while (t)
@@ -26,4 +26,4 @@ func void Pivo(int i, float pivo)
 	i = 1000;
 }
 
-Pivo(4, 4 - 3.4344444444,);	
+Pivo(4, 4 - 3.4344444444);	

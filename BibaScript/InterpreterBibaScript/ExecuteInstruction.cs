@@ -60,7 +60,7 @@ namespace InterpreterBibaScript
             try
             {
                 if (_command.Length < 7)
-                throw new Exception("Few operands to create a function");
+                throw new Exception("Few operands to create a function: " + Code.SubStringMass(_command));
                 SpecialWords wordType;
                 if (CodeTypeWords.GetInstance().TryGetKey(_command[1], out wordType) == false &&
                     CodeTypes.GetInstance().TryGetKey(_command[1], out wordType) == false)
@@ -109,7 +109,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Procedure: " + _command[0] + ": " + ex.Message);
+                throw new Exception("Procedure: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
 
@@ -140,7 +140,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Function: " + _command[0] + ": " + ex.Message);
+                throw new Exception("Function: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
 
@@ -149,7 +149,7 @@ namespace InterpreterBibaScript
             try
             {
                 if (_command.Length < 5)
-                    throw new Exception("Few operands to operate while: " + _command[0]);
+                    throw new Exception("Few operands to operate while: " + Code.SubStringMass(_command));
                 while (true)
                 {
                     int i = 1;
@@ -175,7 +175,7 @@ namespace InterpreterBibaScript
             try
             {
                 if (_command.Length < 5)
-                    throw new Exception("Few operands to operate if: " + _command[0]);
+                    throw new Exception("Few operands to operate if: " + Code.SubStringMass(_command));
                 int i = 1;
                 do
                     try
@@ -229,7 +229,7 @@ namespace InterpreterBibaScript
             try
             {
                 if (_command.Length < 3)
-                    throw new Exception("Few operands to declarte variable: " + _command[0]);
+                    throw new Exception("Few operands to declarte variable: " + Code.SubStringMass(_command));
                 CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
                 var t = Code.ConvertWordTypeToTypes(type);
                 Memory.GetInstance().DeclareVariable(t, _command[1]);
@@ -243,7 +243,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Declarate variable: " + _command[0] + ": " + ex.Message);
+                throw new Exception("Declarate variable: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
 
@@ -252,7 +252,7 @@ namespace InterpreterBibaScript
             try
             {
                 if (_command.Length < 4)
-                    throw new Exception("Few operands to assign variable: " + _command[0]);
+                    throw new Exception("Few operands to assign variable: " + Code.SubStringMass(_command));
                 var list = new List<string>(_command);
                 list.RemoveRange(0, 2);
                 list.RemoveAt(list.Count - 1);
@@ -261,7 +261,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Variable: " + _command[0] + ": " + ex.Message);
+                throw new Exception("Variable: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
     }

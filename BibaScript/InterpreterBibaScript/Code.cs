@@ -56,5 +56,13 @@ namespace InterpreterBibaScript
             }
             return type;
         }
+
+        public static string SubStringMass(string[] mass)
+        {
+            string str = string.Empty;
+            foreach (var item in mass)
+                str += item + " ";
+            return str;
+        }
     }
 }
