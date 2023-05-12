@@ -20,43 +20,6 @@ namespace InterpreterBibaScript
         private string _constFunc;
         private string _paramSeparator;
 
-        public static string[] FindBlock(int i, string[] mass, string begin, string end, out int endParam)
-        {
-            var expr = new List<string>();
-            int count = 0;
-            do
-            {
-                if (mass[i] == begin)
-                    count++;
-                else if (mass[i] == end)
-                    count--;
-                expr.Add(mass[i]);
-                i++;
-            } while (i < mass.Length && count != 0);
-            expr.RemoveAt(0);
-            expr.RemoveAt(expr.Count - 1);
-            endParam = i;
-            return expr.ToArray();
-        }
-
-        public static string[] FindInstruction(int i, string[] mass, string end, out int endParam)
-        {
-            var expr = new List<string>();
-            do
-            {
-
-                expr.Add(mass[i]);
-                if (mass[i] == end)
-                {
-                    i++;
-                    break;
-                }
-                i++;
-            } while (i < mass.Length);
-            endParam = i;
-            return expr.ToArray();
-        }
-
         public ExecuteInstruction(string[] command)
         {
             _command = command;
@@ -70,7 +33,7 @@ namespace InterpreterBibaScript
             _constElse = CodeConstructions.GetInstance().GetValue(SpecialWords.ConstructionElse);
             _constWhile = CodeConstructions.GetInstance().GetValue(SpecialWords.ConstructionWhile);
             _paramSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorParameters);
-            _constFunc = CodeTypeWords.GetInstance().GetValue(SpecialWords.DeclarationFunction);
+            _constFunc = CodeConstructions.GetInstance().GetValue(SpecialWords.DeclarationFunction);
         }
 
         //This method run command
@@ -98,18 +61,30 @@ namespace InterpreterBibaScript
         {
             CodeTypeWords.GetInstance().TryGetKey(_command[1], out var wordType);
             var name = _command[2];
-            var blockParam = FindBlock(3, _command, _beginParam, _endParam, out var i);
-            var blockCommand = FindBlock(i, _command, _beginCode, _endCode, out i);
+            var parameters = Parameter.ConvertToParameters(Code.FindBlock(3, _command, _beginParam, _endParam, out var i), _paramSeparator);
+            var blockCommand = Code.FindBlock(i, _command, _beginCode, _endCode, out i);
             if (wordType == SpecialWords.ValueVoid)
             {
-                Memory.GetInstance().DeclareFunction(name, blockCommand);
+                Memory.GetInstance().DeclareFunction(name, blockCommand, parameters);
                 return;
-            }    
+            }
         }
 
         private void CallProcedure()
         {
-            Memory.GetInstance().RunFunction(_command[0]);
+            if (Memory.GetInstance().Procedures.TryGetValue(_command[0], out var proc) == false)
+                throw new Exception("No such procedure: " + _command[0]);
+            var values = new List<string>();
+            var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
+            int k = 0;
+            foreach (var p in proc.Parameters)
+            {
+                var parameter = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
+                if (parameter[parameter.Count - 1] == _paramSeparator)
+                    parameter.RemoveAt(parameter.Count - 1);
+                values.Add(Comber.Calculate(p.Type, parameter.ToArray()));
+            }
+            Memory.GetInstance().RunFunction(_command[0], values.ToArray());
         }
 
         private string CallFunction()
@@ -117,11 +92,14 @@ namespace InterpreterBibaScript
             if (Memory.GetInstance().Functions.TryGetValue(_command[0], out var func) == false)
                 throw new Exception("No such function: " + _command[0]);
             var values = new List<string>();
-            var blockParam = FindBlock(1, _command, _beginParam, _endParam, out var i);
+            var blockParam = Code.FindBlock(1, _command, _beginParam, _endParam, out var i);
             int k = 1;
             foreach (var p in func.Parameters)
             {
-                values.Add(Comber.Calculate(p.Type, FindInstruction(k, blockParam, _paramSeparator, out k)));
+                var parameter = new List<string>(Code.FindInstruction(k, blockParam, _paramSeparator, out k));
+                if (parameter[parameter.Count - 1] == _paramSeparator)
+                    parameter.RemoveAt(parameter.Count - 1);
+                values.Add(Comber.Calculate(p.Type, parameter.ToArray()));
             }
             Memory.GetInstance().RunFunction(_command[0], out var result, values.ToArray());
             return result;
@@ -132,18 +110,17 @@ namespace InterpreterBibaScript
             while (true)
             {
                 int i = 1;
-                var value = Comber.Calculate(Types.Boolean, FindBlock(i, _command, _beginParam, _endParam, out i));
+                var value = Comber.Calculate(Types.Boolean, Code.FindBlock(i, _command, _beginParam, _endParam, out i));
                 if (value == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue))
                 {
                     if (_command[i] == _beginCode)
-                        new ExecuteThread(FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                    else new ExecuteInstruction(FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                        new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
+                    else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
                     continue;
                 }
                 else break;
             }
         }
-
 
         private void RunIfOperator()
         {
@@ -151,19 +128,19 @@ namespace InterpreterBibaScript
             do
                 try
                 {
-                    var value = Comber.Calculate(Types.Boolean ,FindBlock(i, _command, _beginParam, _endParam, out i));
+                    var value = Comber.Calculate(Types.Boolean , Code.FindBlock(i, _command, _beginParam, _endParam, out i));
                     if (value == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue))
                     {
                         if (_command[i] == _beginCode)
-                            new ExecuteThread(FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                        else new ExecuteInstruction(FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                            new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
+                        else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
                         break;
                     }
                     else
                     {
                         if (_command[i] == _beginCode)
-                            FindBlock(i, _command, _beginCode, _endCode, out i);
-                        else FindInstruction(i, _command, _endInstruction, out i);
+                            Code.FindBlock(i, _command, _beginCode, _endCode, out i);
+                        else Code.FindInstruction(i, _command, _endInstruction, out i);
                     }
                     if (_command[i] == _constElse)
                     {
@@ -176,8 +153,8 @@ namespace InterpreterBibaScript
                         else
                         {
                             if (_command[i] == _beginCode)
-                                new ExecuteThread(FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                            else new ExecuteInstruction(FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                                new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
+                            else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
                             break;
                         }
                     }
@@ -193,24 +170,7 @@ namespace InterpreterBibaScript
         private void DeclareVariable()
         {
             CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
-            Types t;
-            switch (type)
-            {
-                case SpecialWords.TypeInteger:
-                    t = Types.Integer;
-                    break;
-                case SpecialWords.TypeString:
-                    t = Types.String;
-                    break;
-                case SpecialWords.TypeFloat:
-                    t = Types.Float;
-                    break;
-                case SpecialWords.TypeBoolean:
-                    t = Types.Boolean;
-                    break;
-                default:
-                    throw new Exception("Invalid type " + type.ToString());
-            }
+            var t = Code.ConvertWordTypeToTypes(type);
             Memory.GetInstance().DeclareVariable(t, _command[1]);
             if (_command[2] == _assign)
             {
@@ -229,6 +189,5 @@ namespace InterpreterBibaScript
             string value = Comber.Calculate(Memory.GetInstance().GetVariableType(_command[0]), list.ToArray());
             Memory.GetInstance().SetVariable(_command[0], value);
         }
-
     }
 }

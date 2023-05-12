@@ -29,7 +29,7 @@ namespace InterpreterBibaScript
 
         public Dictionary<string, Function> Functions { get; }
 
-        public Dictionary<string, ExecuteThread> Procedures { get; }
+        public Dictionary<string, Procedure> Procedures { get; }
 
         public Memory()
         {
@@ -38,7 +38,7 @@ namespace InterpreterBibaScript
             Strings = new Dictionary<string, string>();
             Booleans = new Dictionary<string, bool>();
             Functions = new Dictionary<string, Function>();
-            Procedures = new Dictionary<string, ExecuteThread>();
+            Procedures = new Dictionary<string, Procedure>();
             _true = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
             _false = CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
             _separatorStr = CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString);
@@ -67,9 +67,9 @@ namespace InterpreterBibaScript
             Functions.Add(name, new Function(outType, command, parameters));
         }
 
-        public void DeclareFunction(string name, string[] command)
+        public void DeclareFunction(string name, string[] command, params Parameter[] parameters)
         {
-            Procedures.Add(name, new ExecuteThread(command));
+            Procedures.Add(name, new Procedure(command, parameters));
         }
 
         public void RunFunction(string name, out string result, params string[] values)
@@ -79,10 +79,10 @@ namespace InterpreterBibaScript
             else throw new Exception("Function: " + name + " does exist");
         }
 
-        public void RunFunction(string name)
+        public void RunFunction(string name, params string[] values)
         {
             if (Procedures.TryGetValue(name, out var proc))
-                proc.PeformBlockCommand();
+                proc.Run(values);
             else throw new Exception("Procedure: " + name + " does exist");
         }
 

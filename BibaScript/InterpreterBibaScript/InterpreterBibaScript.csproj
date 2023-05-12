@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSExecutor.cs" />
+    <Compile Include="Code.cs" />
     <Compile Include="Comber.cs" />
     <Compile Include="ExecuteInstruction.cs" />
     <Compile Include="ExecuteThread.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Memory.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Procedure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

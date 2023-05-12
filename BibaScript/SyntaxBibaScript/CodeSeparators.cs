@@ -21,6 +21,7 @@
             _dictionary.Add(SpecialWords.ContinueCode, ":");
             _dictionary.Add(SpecialWords.Assign, "=");
             _dictionary.Add(SpecialWords.SeparatorString, "\"");
+            _dictionary.Add(SpecialWords.SeparatorParameters, ",");
         }
     }
 }
