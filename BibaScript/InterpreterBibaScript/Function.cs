@@ -22,7 +22,14 @@ namespace InterpreterBibaScript
             if (values.Length != Parameters.Length)
                 throw new Exception("Invalid count parameters");
             var thread = new ExecuteThread(ConvertParameters(Commands, values));
-            return Comber.Calculate(ReturnType, new string[] { thread.PeformBlockCommand() });
+            try
+            {
+                return Comber.Calculate(ReturnType, new string[] { thread.PeformBlockCommand() });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid return value: " + ex.Message);
+            }
         }
 
         private string[] ConvertParameters(string[] commands, string[] values)

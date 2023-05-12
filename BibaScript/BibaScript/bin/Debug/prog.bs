@@ -1,4 +1,4 @@
-func void Pivo(idsfds i, float pivo)
+func void Pivo(int i, float pivo)
 {
 	bool t = true;
 	while (t)

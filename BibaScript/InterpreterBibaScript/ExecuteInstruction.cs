@@ -1,5 +1,4 @@
-﻿using BeutifulConsole;
-using SyntaxBibaScript;
+﻿using SyntaxBibaScript;
 using System;
 using System.Collections.Generic;
 
@@ -39,7 +38,6 @@ namespace InterpreterBibaScript
         //This method run command
         public void PeformCommand()
         {
-            View.ColorWriteLine(_command[0], System.ConsoleColor.Yellow);
             if (CodeTypes.GetInstance().ContainsValue(_command[0]))
                 DeclareVariable();
             else if (Memory.GetInstance().GetAllNames().Contains(_command[0]))
@@ -59,27 +57,38 @@ namespace InterpreterBibaScript
 
         private void DeclareFunction()
         {
-            SpecialWords wordType;
-            if (CodeTypeWords.GetInstance().TryGetKey(_command[1], out wordType)) ;
-            else if (CodeTypes.GetInstance().TryGetKey(_command[1], out wordType)) ;
-            else throw new Exception("Invalid type for declare function: " + _command[1]);
-
-            var name = _command[2];
-            var parameters = Parameter.ConvertToParameters(Code.FindBlock(3, _command, _beginParam, _endParam, out var i), _paramSeparator);
-            var blockCommand = Code.FindBlock(i, _command, _beginCode, _endCode, out i);
-            if (wordType == SpecialWords.ValueVoid)
+            try
             {
-                Memory.GetInstance().DeclareFunction(name, blockCommand, parameters);
-                return;
+                if (_command.Length < 7)
+                throw new Exception("Few operands to create a function");
+                SpecialWords wordType;
+                if (CodeTypeWords.GetInstance().TryGetKey(_command[1], out wordType) == false &&
+                    CodeTypes.GetInstance().TryGetKey(_command[1], out wordType) == false)
+                    throw new Exception("Invalid type for declare function: " + _command[1]);
+
+                var name = _command[2];
+                var parameters = Parameter.ConvertToParameters(Code.FindBlock(3, _command, _beginParam, _endParam, out var i), _paramSeparator);
+                var blockCommand = Code.FindBlock(i, _command, _beginCode, _endCode, out i);
+                if (wordType == SpecialWords.ValueVoid)
+                {
+                    Memory.GetInstance().DeclareFunction(name, blockCommand, parameters);
+                    return;
+                }
+                var returnType = Code.ConvertWordTypeToTypes(wordType);
+                Memory.GetInstance().DeclareFunction(returnType, name, blockCommand, parameters);
             }
-            var returnType = Code.ConvertWordTypeToTypes(wordType);
-            Memory.GetInstance().DeclareFunction(returnType, name, blockCommand, parameters);
+            catch (Exception ex)
+            {
+                throw new Exception("Procedure: " + _command[0] + ": " + ex.Message);
+            }
         }
 
         private void CallProcedure()
         {
             try
             {
+                if (_command.Length < 4)
+                    throw new Exception("Few operands to call a procedure: " + _command[0]);
                 if (Memory.GetInstance().Procedures.TryGetValue(_command[0], out var proc) == false)
                 throw new Exception("No such procedure: " + _command[0]);
                 var values = new List<string>();
@@ -108,6 +117,8 @@ namespace InterpreterBibaScript
         {
             try
             {
+                if (_command.Length < 4)
+                    throw new Exception("Few operands to call a function: " + _command[0]);
                 if (Memory.GetInstance().Functions.TryGetValue(_command[0], out var func) == false)
                 throw new Exception("No such function: " + _command[0]);
                 var values = new List<string>();
@@ -135,87 +146,123 @@ namespace InterpreterBibaScript
 
         private void RunWhileOperator()
         {
-            while (true)
+            try
             {
-                int i = 1;
-                var value = Comber.Calculate(Types.Boolean, Code.FindBlock(i, _command, _beginParam, _endParam, out i));
-                if (value == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue))
+                if (_command.Length < 5)
+                    throw new Exception("Few operands to operate while: " + _command[0]);
+                while (true)
                 {
-                    if (_command[i] == _beginCode)
-                        new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                    else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
-                    continue;
-                }
-                else break;
-            }
-        }
-
-        private void RunIfOperator()
-        {
-            int i = 1;
-            do
-                try
-                {
-                    var value = Comber.Calculate(Types.Boolean , Code.FindBlock(i, _command, _beginParam, _endParam, out i));
+                    int i = 1;
+                    var value = Comber.Calculate(Types.Boolean, Code.FindBlock(i, _command, _beginParam, _endParam, out i));
                     if (value == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue))
                     {
                         if (_command[i] == _beginCode)
                             new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
                         else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
-                        break;
+                        continue;
                     }
-                    else
+                    else break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Operator: " + _command[0] + ": " + ex.Message);
+            }
+        }
+
+        private void RunIfOperator()
+        {
+            try
+            {
+                if (_command.Length < 5)
+                    throw new Exception("Few operands to operate if: " + _command[0]);
+                int i = 1;
+                do
+                    try
                     {
-                        if (_command[i] == _beginCode)
-                            Code.FindBlock(i, _command, _beginCode, _endCode, out i);
-                        else Code.FindInstruction(i, _command, _endInstruction, out i);
-                    }
-                    if (_command[i] == _constElse)
-                    {
-                        i++;
-                        if (_command[i] == _constIf)
-                        {
-                            i++;
-                            continue;
-                        }
-                        else
+                        var value = Comber.Calculate(Types.Boolean , Code.FindBlock(i, _command, _beginParam, _endParam, out i));
+                        if (value == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue))
                         {
                             if (_command[i] == _beginCode)
                                 new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
                             else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
                             break;
                         }
+                        else
+                        {
+                            if (_command[i] == _beginCode)
+                                Code.FindBlock(i, _command, _beginCode, _endCode, out i);
+                            else Code.FindInstruction(i, _command, _endInstruction, out i);
+                        }
+                        if (_command[i] == _constElse)
+                        {
+                            i++;
+                            if (_command[i] == _constIf)
+                            {
+                                i++;
+                                continue;
+                            }
+                            else
+                            {
+                                if (_command[i] == _beginCode)
+                                    new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
+                                else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                                break;
+                            }
+                        }
+                        else throw new Exception("no such else block");
                     }
-                    else throw new Exception("no such else block");
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Invalid syntax: " + _command[i-1] + " :" + ex.Message);
-                }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Invalid syntax: " + _command[i-1] + " :" + ex.Message);
+                    }
                 while (i < _command.Length);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Operator: " + _command[0] + ": " + ex.Message);
+            }
         }
 
         private void DeclareVariable()
         {
-            CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
-            var t = Code.ConvertWordTypeToTypes(type);
-            Memory.GetInstance().DeclareVariable(t, _command[1]);
-            if (_command[2] == _assign)
+            try
             {
-                var list = new List<string>(_command);
-                list.RemoveAt(0);
-                _command = list.ToArray();
-                AssignVariable();
+                if (_command.Length < 3)
+                    throw new Exception("Few operands to declarte variable: " + _command[0]);
+                CodeTypes.GetInstance().TryGetKey(_command[0], out var type);
+                var t = Code.ConvertWordTypeToTypes(type);
+                Memory.GetInstance().DeclareVariable(t, _command[1]);
+                if (_command[2] == _assign)
+                {
+                    var list = new List<string>(_command);
+                    list.RemoveAt(0);
+                    _command = list.ToArray();
+                    AssignVariable();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Declarate variable: " + _command[0] + ": " + ex.Message);
             }
         }
 
         private void AssignVariable()
         {
-            var list = new List<string>(_command);
-            list.RemoveRange(0, 2);
-            list.RemoveAt(list.Count - 1);
-            string value = Comber.Calculate(Memory.GetInstance().GetVariableType(_command[0]), list.ToArray());
-            Memory.GetInstance().SetVariable(_command[0], value);
+            try
+            {
+                if (_command.Length < 4)
+                    throw new Exception("Few operands to assign variable: " + _command[0]);
+                var list = new List<string>(_command);
+                list.RemoveRange(0, 2);
+                list.RemoveAt(list.Count - 1);
+                string value = Comber.Calculate(Memory.GetInstance().GetVariableType(_command[0]), list.ToArray());
+                Memory.GetInstance().SetVariable(_command[0], value);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Variable: " + _command[0] + ": " + ex.Message);
+            }
         }
     }
 }
