@@ -15,6 +15,11 @@ namespace InterpreterBibaScript
             return _instance;
         }
 
+        public static void SetInstance(Memory memory)
+        {
+            _instance = memory;
+        }
+
         private string _true;
         private string _false;
         private string _separatorStr;
@@ -44,6 +49,16 @@ namespace InterpreterBibaScript
             _separatorStr = CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString);
         }
 
+        public Memory(Memory prototype) : this()
+        {
+            Integers = new Dictionary<string, int>(prototype.Integers);
+            Floats = new Dictionary<string, float>(prototype.Floats);
+            Strings = new Dictionary<string, string>(prototype.Strings);
+            Booleans = new Dictionary<string, bool>(prototype.Booleans);
+            Functions = new Dictionary<string, Function>(prototype.Functions);
+            Procedures = new Dictionary<string, Procedure>(prototype.Procedures);
+        }
+
         public List<string> GetAllNames()
         {
             var list = new List<string>();
@@ -64,12 +79,12 @@ namespace InterpreterBibaScript
 
         public void DeclareFunction(Types outType, string name, string[] command, params Parameter[] parameters)
         {
-            Functions.Add(name, new Function(outType, command, parameters));
+            Functions.Add(name, new Function(name, outType, command, _instance, parameters));
         }
 
         public void DeclareFunction(string name, string[] command, params Parameter[] parameters)
         {
-            Procedures.Add(name, new Procedure(command, parameters));
+            Procedures.Add(name, new Procedure(name, command, _instance, parameters));
         }
 
         public void RunFunction(string name, out string result, params string[] values)

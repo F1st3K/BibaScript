@@ -21,75 +21,84 @@ namespace InterpreterBibaScript
             _endCode = CodeSeparators.GetInstance().GetValue(SpecialWords.EndCode);
         }
 
-        //This cycle run separate code on block commands and run execute for one command
-        public string PeformBlockCommand()
+        public void PeformBlockCommand()
+        {
+            var values = Memory.GetInstance().GetAllNames();
+
+            for (int i = 0; i < _commands.Length;)
+            {
+                if (_commands[i] == _beginCode)
+                {
+                    new ExecuteThread(Code.FindBlock(i, _commands, _beginCode, _endCode, out i)).PeformBlockCommand();
+                    continue;
+                }
+                var cmds = FindCommand(i, out i);
+                if (cmds[0] == CodeTypeWords.GetInstance().GetValue(SpecialWords.FunctionReturn))
+                    break;
+                new ExecuteInstruction(cmds).PeformCommand();
+            }
+            var m = Memory.GetInstance();
+            Memory.GetInstance().RemoveWithout(values.ToArray());
+        }
+
+        public string PeformBlockCommand(Types returnType)
         {
             var values = Memory.GetInstance().GetAllNames();
             string result = string.Empty;
-            for (int i = 0; i < _commands.Length; )
+
+            for (int i = 0; i < _commands.Length;)
             {
-                var cmds = new List<string>();
                 if (_commands[i] == _beginCode)
                 {
-                    //Such block command and run new thread
-                    var count = 0;
-                    do
-                    {
-                        if (_commands[i] == _beginCode)
-                            count++;
-                        if (_commands[i] == _endCode)
-                            count--;
-                        if (count < 0)
-                            throw new System.Exception("Invalid code separator " + _commands[i]);
-                        cmds.Add(_commands[i]);
-                        i++;
-                        if (i >= _commands.Length)
-                            throw new System.Exception("Non such end command " + _beginCode + " ... " + _commands[_commands.Length - 1]);
-                    }
-                    while (count != 0);
-                    cmds.RemoveAt(0);
-                    cmds.RemoveAt(cmds.Count - 1);
-                    new ExecuteThread(cmds.ToArray()).PeformBlockCommand();
+                    new ExecuteThread(Code.FindBlock(i, _commands, _beginCode, _endCode, out i)).PeformBlockCommand();
                     continue;
                 }
-                //Such and run command
-                do
-                {
-                    var mode = false;
-                    var countBaket = 0;
-                    if (_commands[i] == _continueCode)
-                        i++;
-                    do
-                    {
-                        if (_commands[i] == _beginCode && countBaket == 0)
-                            mode = true;
-                        if (_commands[i] == _beginCode)
-                            countBaket++;
-                        if (_commands[i] == _endCode)
-                            countBaket--;
-                        if (countBaket < 0)
-                            throw new System.Exception("Invalid code separator " + _commands[i]);
-                        cmds.Add(_commands[i]);
-                        i++;
-                        if (i > _commands.Length)
-                            throw new System.Exception("Non such end command " + _beginCode + " ... " + _commands[_commands.Length - 1]);
-                    }
-                    while (mode ? countBaket != 0 : _commands[i - 1] != _endString);
-                    if (i >= _commands.Length)
-                        break;
-                }
-                while (_commands[i] == _continueCode);
+                var cmds = FindCommand(i, out i);
                 if (cmds[0] == CodeTypeWords.GetInstance().GetValue(SpecialWords.FunctionReturn))
                 {
-                    if (cmds[1] != CodeSeparators.GetInstance().GetValue(SpecialWords.EndInstruction))
-                        result = cmds[1];
-                    return result;
+                    var list = new List<string>(Code.FindInstruction(1, cmds, _endString, out _));
+                    list.RemoveAt(list.Count - 1);
+                    result =  Comber.Calculate(returnType, list.ToArray());
+                    break;
                 }
-                new ExecuteInstruction(cmds.ToArray()).PeformCommand();
+                new ExecuteInstruction(cmds).PeformCommand();
             }
             var m = Memory.GetInstance();
             Memory.GetInstance().RemoveWithout(values.ToArray());
             return result;
+        }
+
+        private string[] FindCommand(int i, out int end)
+        {
+            var cmds = new List<string>();
+            do
+            {
+                var mode = false;
+                var countBaket = 0;
+                if (_commands[i] == _continueCode)
+                    i++;
+                do
+                {
+                    if (_commands[i] == _beginCode && countBaket == 0)
+                        mode = true;
+                    if (_commands[i] == _beginCode)
+                        countBaket++;
+                    if (_commands[i] == _endCode)
+                        countBaket--;
+                    if (countBaket < 0)
+                        throw new System.Exception("Invalid code separator " + _commands[i]);
+                    cmds.Add(_commands[i]);
+                    i++;
+                    if (i > _commands.Length)
+                        throw new System.Exception("Non such end command " + _beginCode + " ... " + _commands[_commands.Length - 1]);
+                }
+                while (mode ? countBaket != 0 : _commands[i - 1] != _endString);
+                if (i >= _commands.Length)
+                    break;
+            }
+            while (_commands[i] == _continueCode);
+            end = i;
+            return cmds.ToArray();
         }
     }
 }

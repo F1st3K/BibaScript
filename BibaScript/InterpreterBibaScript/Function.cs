@@ -9,27 +9,35 @@ namespace InterpreterBibaScript
         public readonly Types ReturnType;
         public readonly Parameter[] Parameters;
         public readonly string[] Commands;
+        public readonly Memory RunMemory;
 
-        public Function(Types returnType, string[] commands, params Parameter[] parameters)
+        public Function(string name, Types returnType, string[] commands, Memory runMemory, params Parameter[] parameters)
         {
             ReturnType = returnType;
             Commands = commands;
             Parameters = parameters;
+            RunMemory = new Memory(runMemory);
+            RunMemory.Functions.Add(name, this);
         }
 
         public string Run(params string[] values)
         {
+            var m = Memory.GetInstance();
+            Memory.SetInstance(RunMemory);
             if (values.Length != Parameters.Length)
                 throw new Exception("Invalid count parameters");
             var thread = new ExecuteThread(ConvertParameters(Commands, values));
             try
             {
-                return Comber.Calculate(ReturnType, new string[] { thread.PeformBlockCommand() });
+                var result = thread.PeformBlockCommand(ReturnType);
+                Memory.SetInstance(m);
+                return result;
             }
             catch (Exception ex)
             {
                 throw new Exception("Invalid return value: " + ex.Message);
             }
+            
         }
 
         private string[] ConvertParameters(string[] commands, string[] values)

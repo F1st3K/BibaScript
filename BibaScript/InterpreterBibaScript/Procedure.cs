@@ -8,18 +8,24 @@ namespace InterpreterBibaScript
     {
         public readonly Parameter[] Parameters;
         public readonly string[] Commands;
+        public readonly Memory RunMemory;
 
-        public Procedure(string[] commands, params Parameter[] parameters)
+        public Procedure(string name, string[] commands, Memory runMemory, params Parameter[] parameters)
         {
             Commands = commands;
             Parameters = parameters;
+            RunMemory = new Memory(runMemory);
+            RunMemory.Procedures.Add(name, this);
         }
 
         public void Run(params string[] values)
         {
+            var m = Memory.GetInstance();
+            Memory.SetInstance(RunMemory);
             if (values.Length != Parameters.Length)
                 throw new Exception("Invalid count parameters");
             new ExecuteThread(ConvertParameters(Commands, values)).PeformBlockCommand();
+            Memory.SetInstance(m);
         }
 
         private string[] ConvertParameters(string[] commands, string[] values)

@@ -245,6 +245,7 @@ namespace InterpreterBibaScript
                 else if (element == ValueTrue)
                     expression += 1;
                 else if (element == ValueFalse)
+
                     expression += 0;
                 else throw new Exception("Invalid value: " + element);
             }

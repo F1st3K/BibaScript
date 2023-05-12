@@ -1,13 +1,15 @@
-func string Hello()
-{
-	return "Hello world!" + " " + true + " " + 99.99;
-}
+func int Hello()
+	{
+		int i = 45;
+		return i;
+	}
 
 func void Pivo(int i, float pivo)
 {
+	
 	bool t = true;
 	while (t)
-	{		
+	{
 		i = i + 1;
 		t = false;
 	}
