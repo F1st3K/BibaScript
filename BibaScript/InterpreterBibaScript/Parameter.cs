@@ -27,7 +27,8 @@ namespace InterpreterBibaScript
                 if (param.Count != 2)
                     throw new Exception("Invalid declare parameter: " + Code.SubStringMass(param.ToArray()));
                 p--;
-                CodeTypes.GetInstance().TryGetKey(param[0], out var t);
+                if (CodeTypes.GetInstance().TryGetKey(param[0], out var t) == false)
+                    throw new Exception("Invalid type: " + param[0]);
                 var type = Code.ConvertWordTypeToTypes(t);
                 parameters.Add(new Parameter(type, param[1]));
             }

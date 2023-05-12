@@ -64,5 +64,13 @@ namespace InterpreterBibaScript
                 str += item + " ";
             return str;
         }
+
+        public static string SubStringMass(string[] mass, int maxIndex)
+        {
+            var list = new List<string>(mass);
+            if (list.Count > maxIndex)
+                list.RemoveRange(maxIndex, list.Count - maxIndex);
+            return SubStringMass(list.ToArray());
+        }
     }
 }

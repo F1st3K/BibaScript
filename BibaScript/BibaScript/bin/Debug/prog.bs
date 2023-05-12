@@ -1,4 +1,9 @@
-func int Pivo(int i, float pivo)
+func string Hello()
+{
+	return "Hello world!" + " " + true + " " + 99.99;
+}
+
+func void Pivo(int i, float pivo)
 {
 	bool t = true;
 	while (t)
@@ -16,8 +21,8 @@ func int Pivo(int i, float pivo)
 	:else if (true)
 	{
 		bool g = true;
-		string gh = "3" + "34";
-		i = g + gh;
+		string gh = "3" + Hello() + "34" + 34;
+		string d = g + gh;
 	}
 	:else if (0)
 		i = 0;
@@ -25,5 +30,4 @@ func int Pivo(int i, float pivo)
 		pivo = pivo - 1;
 	i = 1000;
 }
-
 Pivo(4, 4 - 3.4344444444);	

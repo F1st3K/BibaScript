@@ -43,6 +43,7 @@ namespace InterpreterBibaScript
         //Run calculate
         public static string Calculate(Types type, string[] expr)
         {
+            expr = Prepocess(expr);
             if (expr.Length <= 0)
                 throw new Exception("Value is not find");
             switch (type)
@@ -56,9 +57,50 @@ namespace InterpreterBibaScript
                 case Types.Boolean:
                     return CalculateBool(expr);
                 default:
-                    break;
+                    throw new Exception("Invalid type: " + type.ToString());
             }
-            throw new Exception("Invalid type: " + type.ToString());
+        }
+
+        private static string[] Prepocess(string[] expr)
+        {
+            var list = new List<string>();
+            for (int i = 0; i < expr.Length; i++)
+                if (Memory.GetInstance().GetAllNames().Contains(expr[i]))
+                    try
+                    {
+                        if (Memory.GetInstance().Functions.TryGetValue(expr[i], out var func))
+                        {
+                            var j = i;
+                            var beginParam = CodeSeparators.GetInstance().GetValue(SpecialWords.BeginParameters);
+                            var endParam = CodeSeparators.GetInstance().GetValue(SpecialWords.EndParameters);
+                            var paramSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorParameters);
+                            var values = new List<string>();
+                            var blockParam = Code.FindBlock(j + 1, expr, beginParam, endParam, out i);
+                            int k = 0;
+                            for (int countParam = 0; countParam < func.Parameters.Length; countParam++)
+                            {
+                                if (k >= blockParam.Length)
+                                    throw new Exception("Less Parameters to Expect: " + expr[j + 1] + beginParam + func.Parameters.Length + endParam);
+                                var commands = new List<string>(Code.FindInstruction(k, blockParam, paramSeparator, out k));
+                                if (commands[commands.Count - 1] == paramSeparator)
+                                    commands.RemoveAt(commands.Count - 1);
+                                values.Add(Comber.Calculate(func.Parameters[countParam].Type, commands.ToArray()));
+                            }
+                            if (k < blockParam.Length)
+                                throw new Exception("More Parameters to Expect: " + expr[j] + beginParam + func.Parameters.Length + endParam);
+                            Memory.GetInstance().RunFunction(expr[j], out var result, values.ToArray());
+                            list.Add(result);
+                            i--;
+                            continue;
+                        }
+                        list.Add(Memory.GetInstance().GetVariable(expr[i]).ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Preprocessor: " + expr[i] + ": " + ex.Message);
+                    }
+                else list.Add(expr[i]);
+            return list.ToArray();
         }
 
         //Calculate equals expression
@@ -96,44 +138,6 @@ namespace InterpreterBibaScript
             {
                 if (Logics.TryGetValue(element, out var el))
                     expression += el;
-                else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    try
-                    {
-                        switch (Memory.GetInstance().GetVariableType(element))
-                        {
-                            case Types.Integer:
-                                var i = Memory.GetInstance().GetVariable(element).ToString();
-                                if (i == "0" || i == "1")
-                                    expression += i == "0" ? "~1" : "1";
-                                else throw new Exception("No such conversion: " + element);
-                                break;
-                            case Types.String:
-                                var s = Memory.GetInstance().GetVariable(element);
-                                s = Convert.ToSingle(s.Substring(1, s.Length - 2)).ToString();
-                                if (s == ValueFalse || s == ValueTrue)
-                                    expression += s == "false" ?"~1" : "1";
-                                else throw new Exception("No such conversion: " + element);
-                                break;
-                            case Types.Float:
-                                var f = ((int)Convert.ToSingle(Memory.GetInstance().GetVariable(element))).ToString();
-                                if (f == "0" || f == "1")
-                                    expression += f == "0" ? "~1" : "1";
-                                else throw new Exception("No such conversion: " + element);
-                                break;
-                            case Types.Boolean:
-                                var b = Memory.GetInstance().GetVariable(element);
-                                if (b == ValueFalse || b == ValueTrue)
-                                    expression += b == "false" ? "~1" : "1";
-                                else throw new Exception("No such conversion: " + element);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
-                    }
                 else if (int.TryParse(element, out var intNum))
                 {
                     var i = intNum.ToString();
@@ -172,37 +176,12 @@ namespace InterpreterBibaScript
             {
                 if (Operations.Contains(element))
                     expression += element;
-                else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    try
-                    {
-                        switch (Memory.GetInstance().GetVariableType(element))
-                        {
-                            case Types.Integer:
-                                expression += Memory.GetInstance().GetVariable(element).ToString();
-                                break;
-                            case Types.String:
-                                var s = Memory.GetInstance().GetVariable(element);
-                                expression += Convert.ToSingle(s.Substring(1, s.Length - 2)).ToString();
-                                break;
-                            case Types.Float:
-                                expression += Memory.GetInstance().GetVariable(element).ToString();
-                                break;
-                            case Types.Boolean:
-                                CodeTypeWords.GetInstance().TryGetValue(SpecialWords.ValueTrue, out var v);
-                                expression += Memory.GetInstance().GetVariable(element) == v ? 1 : 0;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
-                    }
                 else if (int.TryParse(element, out var intNum))
                     expression += intNum.ToString();
                 else if (float.TryParse(element.Replace('.', ','), out var fNum))
                     expression += fNum.ToString();
+                else if (element.StartsWith(SeparatorStr) && element.EndsWith(SeparatorStr))
+                    expression += Convert.ToSingle(element.Substring(1, element.Length - 2));
                 else if (element == ValueTrue)
                     expression += 1;
                 else if (element == ValueFalse)
@@ -222,32 +201,6 @@ namespace InterpreterBibaScript
             {
                 if (element == Operations[0])
                     expression.Add(element);
-                else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    try
-                    {
-                        switch (Memory.GetInstance().GetVariableType(element))
-                        {
-                            case Types.Integer:
-                                expression.Add(Memory.GetInstance().GetVariable(element));
-                                break;
-                            case Types.String:
-                                var v = Memory.GetInstance().GetVariable(element);
-                                expression.Add(v.Substring(1, v.Length - 2));
-                                break;
-                            case Types.Float:
-                                expression.Add(Memory.GetInstance().GetVariable(element));
-                                break;
-                            case Types.Boolean:
-                                expression.Add(Memory.GetInstance().GetVariable(element));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
-                    }
                 else if (int.TryParse(element, out var intNum))
                     expression.Add(intNum.ToString());
                 else if (float.TryParse(element, out var fNum))
@@ -283,36 +236,12 @@ namespace InterpreterBibaScript
             {
                 if (Operations.Contains(element))
                     expression += element;
-                else if (Memory.GetInstance().GetAllNames().Contains(element))
-                    try
-                    {
-                        switch (Memory.GetInstance().GetVariableType(element))
-                        {
-                            case Types.Integer:
-                                expression += Memory.GetInstance().GetVariable(element);
-                                break;
-                            case Types.String:
-                                var s = Memory.GetInstance().GetVariable(element);
-                                expression += Convert.ToInt32(s.Substring(1, s.Length - 2)).ToString();
-                                break;
-                            case Types.Float:
-                                expression += Memory.GetInstance().GetVariable(element).ToString();
-                                break;
-                            case Types.Boolean:
-                                expression += Memory.GetInstance().GetVariable(element) == ValueTrue ? 1 : 0;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Invalid type conversion: " + element + ": " + ex.Message);
-                    }
                 else if (int.TryParse(element, out var intNum))
                     expression += intNum.ToString();
                 else if (float.TryParse(element, out var fNum))
                     expression += fNum.ToString();
+                else if (element.StartsWith(SeparatorStr) && element.EndsWith(SeparatorStr))
+                    expression += Convert.ToInt32(element.Substring(1, element.Length - 2));
                 else if (element == ValueTrue)
                     expression += 1;
                 else if (element == ValueFalse)

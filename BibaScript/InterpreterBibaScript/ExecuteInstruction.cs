@@ -79,7 +79,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Procedure: " + _command[0] + ": " + ex.Message);
+                throw new Exception("Declarete Function: " + Code.SubStringMass(_command, 3) + "(): " + ex.Message);
             }
         }
 
@@ -109,7 +109,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Procedure: " + Code.SubStringMass(_command) + ": " + ex.Message);
+                throw new Exception("Call Procedure: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
 
@@ -140,7 +140,7 @@ namespace InterpreterBibaScript
             }
             catch (Exception ex)
             {
-                throw new Exception("Function: " + Code.SubStringMass(_command) + ": " + ex.Message);
+                throw new Exception("Call Function: " + Code.SubStringMass(_command) + ": " + ex.Message);
             }
         }
 
