@@ -27,6 +27,10 @@ namespace InterpreterBibaScript
                 Types.Boolean, 
                 new Parameter(Types.String, "a"),
                 new Parameter(Types.String, "b")));
+            Functions.Add("Unequal", new SystemFunction(Unequal,
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("More", new SystemFunction(More,
                 Types.Boolean,
                 new Parameter(Types.String, "a"),
@@ -51,7 +55,7 @@ namespace InterpreterBibaScript
                 Types.String));
             Procedures.Add("Write", new SystemProcedure(Write,
                 new Parameter(Types.String, "value")));
-            Procedures.Add("WriteLine", new SystemProcedure(Write,
+            Procedures.Add("WriteLine", new SystemProcedure(WriteLine,
                 new Parameter(Types.String, "value")));
         }
 
@@ -81,13 +85,9 @@ namespace InterpreterBibaScript
 
         private string LessEqual(string[] arg)
         {
-            if (arg.Length != 2)
-                throw new Exception("Invalid count parameters");
-            var a = Code.TryRemoveStringSeparators(arg[0]);
-            var b = Code.TryRemoveStringSeparators(arg[1]);
-            if (Convert.ToSingle(a) <= Convert.ToSingle(b))
-                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
-            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
+            return More(arg) == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue)
+                ? CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse)
+                : CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
         }
 
         private string MoreEqual(string[] arg)
@@ -103,13 +103,9 @@ namespace InterpreterBibaScript
 
         private string Less(string[] arg)
         {
-            if (arg.Length != 2)
-                throw new Exception("Equals(2): Invalid count parameters");
-            var a = Code.TryRemoveStringSeparators(arg[0]);
-            var b = Code.TryRemoveStringSeparators(arg[1]);
-            if (Convert.ToSingle(a) < Convert.ToSingle(b))
-                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
-            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
+            return MoreEqual(arg) == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue)
+                ? CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse)
+                : CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
         }
 
         private string More(string[] arg)
@@ -132,6 +128,13 @@ namespace InterpreterBibaScript
             if (a == b)
                 return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
             return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
+        }
+
+        private string Unequal(params string[] arg)
+        {
+            return Equal(arg) == CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue)
+                ? CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse)
+                : CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
         }
 
     }

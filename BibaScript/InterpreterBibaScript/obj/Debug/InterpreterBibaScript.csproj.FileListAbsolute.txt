@@ -10,3 +10,5 @@ C:\repos\BibaScript\BibaScript\InterpreterBibaScript\obj\Debug\InterpreterBibaSc
 C:\repos\BibaScript\BibaScript\InterpreterBibaScript\bin\Debug\SyntaxBibaScript.dll
 C:\repos\BibaScript\BibaScript\InterpreterBibaScript\bin\Debug\SyntaxBibaScript.pdb
 C:\repos\BibaScript\BibaScript\InterpreterBibaScript\bin\Debug\Calculator.dll
+C:\repos\BibaScript\BibaScript\InterpreterBibaScript\bin\Debug\LogicCalculator.dll
+C:\repos\BibaScript\BibaScript\InterpreterBibaScript\bin\Debug\LogicCalculator.pdb

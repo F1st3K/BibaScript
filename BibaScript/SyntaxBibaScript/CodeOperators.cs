@@ -22,12 +22,9 @@
             _dictionary.Add(SpecialWords.OperationPow, "^");
             _dictionary.Add(SpecialWords.OperationUnm, "~");
 
-            _dictionary.Add(SpecialWords.ExprEqual, "==");
-            _dictionary.Add(SpecialWords.ExprUnequal, "!=");
-            _dictionary.Add(SpecialWords.ExprMore, ">");
-            _dictionary.Add(SpecialWords.ExprLess, "<");
-            _dictionary.Add(SpecialWords.ExprMoreEqual, ">=");
-            _dictionary.Add(SpecialWords.ExprLessEqual, "<=");
+            _dictionary.Add(SpecialWords.OperatorAnd, "&&");
+            _dictionary.Add(SpecialWords.OperatorNot, "!");
+            _dictionary.Add(SpecialWords.OperatorOr, "||");
         }
     }
 }

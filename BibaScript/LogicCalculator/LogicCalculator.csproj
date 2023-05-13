@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EED88EA9-89A2-4C73-A952-7D08EBEDBF1B}</ProjectGuid>
+    <ProjectGuid>{51AD4B63-D89F-4CFF-9C22-C0C72830A979}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InterpreterBibaScript</RootNamespace>
-    <AssemblyName>InterpreterBibaScript</AssemblyName>
+    <RootNamespace>LogicCalculator</RootNamespace>
+    <AssemblyName>LogicCalculator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Calculator">
-      <HintPath>..\NumberCalculator\Calculator.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,34 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BSExecutor.cs" />
-    <Compile Include="Code.cs" />
-    <Compile Include="Comber.cs" />
-    <Compile Include="ExecuteInstruction.cs" />
-    <Compile Include="ExecuteThread.cs" />
-    <Compile Include="Function.cs" />
-    <Compile Include="Memory.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="Procedure.cs" />
+    <Compile Include="LogicCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemFunction.cs" />
-    <Compile Include="SystemLib.cs" />
-    <Compile Include="SystemProcedure.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BeautifulСonsole\BeautifulСonsole.csproj">
-      <Project>{2DCFFCAA-49AE-4EE6-B601-7F6B61CE3848}</Project>
-      <Name>BeautifulСonsole</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LogicCalculator\LogicCalculator.csproj">
-      <Project>{51ad4b63-d89f-4cff-9c22-c0c72830a979}</Project>
-      <Name>LogicCalculator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SyntaxBibaScript\SyntaxBibaScript.csproj">
-      <Project>{563dd99b-ca96-4d9f-a032-35079744cae8}</Project>
-      <Name>SyntaxBibaScript</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
