@@ -8,7 +8,7 @@ namespace InterpreterBibaScript
         public readonly Func<string[], string> Function;
 
         public SystemFunction(Func<string[], string> f, Types returnType, params Parameter[] parameters)
-            : base(string.Empty, returnType, new string[] { }, new Memory(), parameters)
+            : base(returnType, parameters)
         {
             Function = f;
         }

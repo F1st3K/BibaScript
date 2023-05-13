@@ -52,6 +52,10 @@ namespace InterpreterBibaScript
                 RunWhileOperator();
             else if (_command[0] == _constFunc)
                 DeclareFunction();
+            else if (SystemLib.GetInctance().Functions.TryGetValue(_command[0], out var func))
+                func.Run(Code.GetParameters(1, func.Parameters, _command, _beginParam, _endParam, _paramSeparator, out _));
+            else if (SystemLib.GetInctance().Procedures.TryGetValue(_command[0], out var proc))
+                proc.Run(Code.GetParameters(1, proc.Parameters, _command, _beginParam, _endParam, _paramSeparator, out _));
             else throw new Exception("No such instruction or name: " + _command[0]);
         }
 

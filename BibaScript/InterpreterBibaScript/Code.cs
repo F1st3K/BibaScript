@@ -91,5 +91,16 @@ namespace InterpreterBibaScript
                 throw new Exception("More Parameters to Expect: " + command[0] + begin + parameters.Length + end);
             return values.ToArray();
         }
+
+        public static string TryRemoveStringSeparators(string str)
+        {
+            var output = string.Empty;
+            for (int i = 0; i < str.Length; i++)
+                if ((i == 0 || i == str.Length - 1) &&
+                    str[i].ToString() == CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorString))
+                    continue;
+                else output += str[i];
+            return output;
+        }
     }
 }

@@ -73,8 +73,9 @@ namespace InterpreterBibaScript
                     if (Memory.GetInstance().GetAllNames().Contains(expr[i]))
                         if (Memory.GetInstance().Functions.TryGetValue(expr[i], out var func))
                         {
+                            var j = i;
                             var values = Code.GetParameters(i + 1, func.Parameters, expr, beginParam, endParam, paramSeparator, out i);
-                            Memory.GetInstance().RunFunction(expr[i], out var result, values);
+                            Memory.GetInstance().RunFunction(expr[j], out var result, values);
                             list.Add(result);
                             i--;
                         }

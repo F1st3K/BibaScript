@@ -55,6 +55,9 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Procedure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemFunction.cs" />
+    <Compile Include="SystemLib.cs" />
+    <Compile Include="SystemProcedure.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BeautifulСonsole\BeautifulСonsole.csproj">

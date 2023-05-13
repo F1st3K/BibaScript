@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using SyntaxBibaScript;
 
 namespace InterpreterBibaScript
 {
@@ -22,71 +23,115 @@ namespace InterpreterBibaScript
         {
             Functions = new Dictionary<string, SystemFunction>();
             Procedures = new Dictionary<string, SystemProcedure>();
-            Functions.Add("Equal", new SystemFunction(Equal, 
-                SyntaxBibaScript.Types.Boolean, 
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+            Functions.Add("Equal", new SystemFunction(Equal,
+                Types.Boolean, 
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("More", new SystemFunction(More,
-                SyntaxBibaScript.Types.Boolean,
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("Less", new SystemFunction(Less,
-                SyntaxBibaScript.Types.Boolean,
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("MoreEqual", new SystemFunction(MoreEqual,
-                SyntaxBibaScript.Types.Boolean,
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("LessEqual", new SystemFunction(LessEqual,
-                SyntaxBibaScript.Types.Boolean,
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("UnEqual", new SystemFunction(ReadLine,
-                SyntaxBibaScript.Types.Boolean,
-                new Parameter(SyntaxBibaScript.Types.String, "a"),
-                new Parameter(SyntaxBibaScript.Types.String, "b")));
+                Types.Boolean,
+                new Parameter(Types.String, "a"),
+                new Parameter(Types.String, "b")));
             Functions.Add("ReadLine", new SystemFunction(ReadLine,
-                SyntaxBibaScript.Types.String));
+                Types.String));
             Procedures.Add("Write", new SystemProcedure(Write,
-                new Parameter(SyntaxBibaScript.Types.String, "value")));
+                new Parameter(Types.String, "value")));
+            Procedures.Add("WriteLine", new SystemProcedure(Write,
+                new Parameter(Types.String, "value")));
+        }
+
+        private string WriteLine(string[] arg)
+        {
+            if (arg.Length != 1)
+                throw new Exception("Invalid count parameters");
+            Console.WriteLine(Code.TryRemoveStringSeparators(arg[0]));
+            return string.Empty;
         }
 
         private string Write(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 1)
+                throw new Exception("Invalid count parameters");
+            Console.Write(Code.TryRemoveStringSeparators(arg[0]));
+            return string.Empty;
         }
 
         private string ReadLine(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 0)
+                throw new Exception("Invalid count parameters");
+            var s = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorString);
+            return s + Console.ReadLine() + s;
         }
 
         private string LessEqual(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            if (Convert.ToSingle(a) <= Convert.ToSingle(b))
+                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
         }
 
         private string MoreEqual(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            if (Convert.ToSingle(a) >= Convert.ToSingle(b))
+                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
         }
 
         private string Less(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 2)
+                throw new Exception("Equals(2): Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            if (Convert.ToSingle(a) < Convert.ToSingle(b))
+                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
         }
 
         private string More(string[] arg)
         {
-            throw new NotImplementedException();
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            if (Convert.ToSingle(a) > Convert.ToSingle(b))
+                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
         }
 
         private string Equal(params string[] arg)
         {
             if (arg.Length != 2)
-                throw new Exception("Equals(2): Invalid count parameters");
-            return "";
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            if (a == b)
+                return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue);
+            return CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
         }
 
     }

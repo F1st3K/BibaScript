@@ -1,6 +1,8 @@
-func int Hello()
+func string Hello()
 	{
-		int i = 45;
+		WriteLine("Привет)");
+		string i = ReadLine();
+		Write(i);
 		return i;
 	}
 
@@ -20,7 +22,7 @@ func void Pivo(int i, float pivo)
 	}
 	:else if (0)
 		i = i - 1;
-	:else if (true)
+	:else if (More(i, 30))
 	{
 		bool g = true;
 		string gh = "3" + Hello() + "34" + 34;
@@ -32,4 +34,5 @@ func void Pivo(int i, float pivo)
 		pivo = pivo - 1;
 	i = 1000;
 }
-Pivo(4, 4 - 3.4344444444);	
+
+Pivo(30, 4 - 3.4344444444);	

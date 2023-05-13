@@ -10,10 +10,15 @@ namespace InterpreterBibaScript
         public readonly string[] Commands;
         public readonly string[] RunNames;
 
+        public Procedure(params Parameter[] parameters)
+        {
+            Parameters = parameters;
+        }
+
         public Procedure(string name, string[] commands, Memory runMemory, params Parameter[] parameters)
+            : this(parameters)
         {
             Commands = commands;
-            Parameters = parameters;
             var m = new Memory(runMemory);
             m.Procedures.Add(name, this);
             RunNames = m.GetAllNames().ToArray();

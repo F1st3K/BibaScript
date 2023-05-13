@@ -11,11 +11,17 @@ namespace InterpreterBibaScript
         public readonly string[] Commands;
         public readonly string[] RunNames;
 
-        public Function(string name, Types returnType, string[] commands, Memory runMemory, params Parameter[] parameters)
+        public Function(Types returnType, params Parameter[] parameters)
         {
             ReturnType = returnType;
-            Commands = commands;
             Parameters = parameters;
+        }
+
+
+        public Function(string name, Types returnType, string[] commands, Memory runMemory, params Parameter[] parameters)
+            : this(returnType, parameters)
+        {
+            Commands = commands;
             var m = new Memory(runMemory);
             m.Functions.Add(name, this);
             RunNames = m.GetAllNames().ToArray();

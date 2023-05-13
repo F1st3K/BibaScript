@@ -60,6 +60,8 @@ namespace InterpreterBibaScript
                 }
                 else if (countS > 0)
                 {
+                    list.Add(temp);
+                    temp = string.Empty;
                     list.Add(tempS + _strSeparator);
                     countS = 0;
                     tempS = string.Empty;

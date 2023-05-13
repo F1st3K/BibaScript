@@ -6,7 +6,7 @@ namespace InterpreterBibaScript
     {
         public readonly Func<string[], string> Procedure;
         public SystemProcedure(Func<string[], string> p, params Parameter[] parameters)
-            : base(string.Empty, new string[] { }, new Memory(), parameters)
+            : base(parameters)
         {
             Procedure = p;
         }
