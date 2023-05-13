@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
-    internal sealed class Procedure
+    internal class Procedure
     {
         public readonly Parameter[] Parameters;
         public readonly string[] Commands;
@@ -19,7 +19,7 @@ namespace InterpreterBibaScript
             RunNames = m.GetAllNames().ToArray();
         }
 
-        public void Run(params string[] values)
+        public virtual void Run(params string[] values)
         {
             var m = new Memory(Memory.GetInstance());
             Memory.GetInstance().RemoveWithout(RunNames);

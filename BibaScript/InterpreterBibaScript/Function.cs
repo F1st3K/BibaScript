@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace InterpreterBibaScript
 {
-    internal sealed class Function
+    internal class Function
     {
         public readonly Types ReturnType;
         public readonly Parameter[] Parameters;
@@ -21,7 +21,7 @@ namespace InterpreterBibaScript
             RunNames = m.GetAllNames().ToArray();
         }
 
-        public string Run(params string[] values)
+        public virtual string Run(params string[] values)
         {
             var m = new Memory(Memory.GetInstance());
             Memory.GetInstance().RemoveWithout(RunNames);

@@ -37,7 +37,6 @@ namespace InterpreterBibaScript
                     break;
                 new ExecuteInstruction(cmds).PeformCommand();
             }
-            var m = Memory.GetInstance();
             Memory.GetInstance().RemoveWithout(values.ToArray());
         }
 
@@ -63,7 +62,6 @@ namespace InterpreterBibaScript
                 }
                 new ExecuteInstruction(cmds).PeformCommand();
             }
-            var m = Memory.GetInstance();
             Memory.GetInstance().RemoveWithout(values.ToArray());
             return result;
         }

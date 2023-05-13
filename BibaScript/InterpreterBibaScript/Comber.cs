@@ -64,42 +64,33 @@ namespace InterpreterBibaScript
         private static string[] Prepocess(string[] expr)
         {
             var list = new List<string>();
+            var beginParam = CodeSeparators.GetInstance().GetValue(SpecialWords.BeginParameters);
+            var endParam = CodeSeparators.GetInstance().GetValue(SpecialWords.EndParameters);
+            var paramSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorParameters);
             for (int i = 0; i < expr.Length; i++)
-                if (Memory.GetInstance().GetAllNames().Contains(expr[i]))
-                    try
-                    {
+                try
+                {
+                    if (Memory.GetInstance().GetAllNames().Contains(expr[i]))
                         if (Memory.GetInstance().Functions.TryGetValue(expr[i], out var func))
                         {
-                            var j = i;
-                            var beginParam = CodeSeparators.GetInstance().GetValue(SpecialWords.BeginParameters);
-                            var endParam = CodeSeparators.GetInstance().GetValue(SpecialWords.EndParameters);
-                            var paramSeparator = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorParameters);
-                            var values = new List<string>();
-                            var blockParam = Code.FindBlock(j + 1, expr, beginParam, endParam, out i);
-                            int k = 0;
-                            for (int countParam = 0; countParam < func.Parameters.Length; countParam++)
-                            {
-                                if (k >= blockParam.Length)
-                                    throw new Exception("Less Parameters to Expect: " + expr[j + 1] + beginParam + func.Parameters.Length + endParam);
-                                var commands = new List<string>(Code.FindInstruction(k, blockParam, paramSeparator, out k));
-                                if (commands[commands.Count - 1] == paramSeparator)
-                                    commands.RemoveAt(commands.Count - 1);
-                                values.Add(Comber.Calculate(func.Parameters[countParam].Type, commands.ToArray()));
-                            }
-                            if (k < blockParam.Length)
-                                throw new Exception("More Parameters to Expect: " + expr[j] + beginParam + func.Parameters.Length + endParam);
-                            Memory.GetInstance().RunFunction(expr[j], out var result, values.ToArray());
+                            var values = Code.GetParameters(i + 1, func.Parameters, expr, beginParam, endParam, paramSeparator, out i);
+                            Memory.GetInstance().RunFunction(expr[i], out var result, values);
                             list.Add(result);
                             i--;
-                            continue;
                         }
-                        list.Add(Memory.GetInstance().GetVariable(expr[i]).ToString());
+                        else list.Add(Memory.GetInstance().GetVariable(expr[i]).ToString());
+                    else if (SystemLib.GetInctance().Functions.TryGetValue(expr[i], out var func))
+                    {
+                        var values = Code.GetParameters(i + 1, func.Parameters, expr, beginParam, endParam, paramSeparator, out i);
+                        list.Add(func.Run(values));
+                        i--;
+                    }
+                    else list.Add(expr[i]);
                     }
                     catch (Exception ex)
                     {
                         throw new Exception("Preprocessor: " + expr[i] + ": " + ex.Message);
                     }
-                else list.Add(expr[i]);
             return list.ToArray();
         }
 

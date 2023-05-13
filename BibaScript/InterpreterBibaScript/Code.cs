@@ -72,5 +72,24 @@ namespace InterpreterBibaScript
                 list.RemoveRange(maxIndex, list.Count - maxIndex);
             return SubStringMass(list.ToArray());
         }
+
+        public static string[] GetParameters(int i, Parameter[] parameters, string[] command, string begin, string end, string separator, out int endIndex)
+        {
+            var values = new List<string>();
+            var blockParam = Code.FindBlock(i, command, begin, end, out endIndex);
+            int k = 0;
+            for (int countParam = 0; countParam < parameters.Length; countParam++)
+            {
+                if (k >= blockParam.Length)
+                    throw new Exception("Less Parameters to Expect: " + command[0] + begin + parameters.Length + end);
+                var commands = new List<string>(Code.FindInstruction(k, blockParam, separator, out k));
+                if (commands[commands.Count - 1] == separator)
+                    commands.RemoveAt(commands.Count - 1);
+                values.Add(Comber.Calculate(parameters[countParam].Type, commands.ToArray()));
+            }
+            if (k < blockParam.Length)
+                throw new Exception("More Parameters to Expect: " + command[0] + begin + parameters.Length + end);
+            return values.ToArray();
+        }
     }
 }
