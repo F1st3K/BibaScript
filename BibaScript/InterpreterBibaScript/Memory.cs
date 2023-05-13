@@ -15,11 +15,6 @@ namespace InterpreterBibaScript
             return _instance;
         }
 
-        public static void SetInstance(Memory memory)
-        {
-            _instance = memory;
-        }
-
         private string _true;
         private string _false;
         private string _separatorStr;
@@ -183,6 +178,60 @@ namespace InterpreterBibaScript
             if (Booleans.ContainsKey(name))
                 return Types.Boolean;
             throw new Exception("No such variable: " + name);
+        }
+
+        public void RecoveryWithout(Memory m, params string[] values)
+        {
+            var list = new List<string>(values);
+            foreach (var item in m.Integers)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Integers.ContainsKey(item.Key))
+                    Integers[item.Key] = item.Value;
+                else Integers.Add(item.Key, item.Value);
+            }
+            foreach (var item in m.Strings)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Strings.ContainsKey(item.Key))
+                    Strings[item.Key] = item.Value;
+                else Strings.Add(item.Key, item.Value);
+            }
+            foreach (var item in m.Floats)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Floats.ContainsKey(item.Key))
+                    Floats[item.Key] = item.Value;
+                else Floats.Add(item.Key, item.Value);
+            }
+            foreach (var item in m.Booleans)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Booleans.ContainsKey(item.Key))
+                    Booleans[item.Key] = item.Value;
+                else Booleans.Add(item.Key, item.Value);
+            }
+            foreach (var item in m.Functions)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Functions.ContainsKey(item.Key))
+                    Functions[item.Key] = item.Value;
+                else Functions.Add(item.Key, item.Value);
+            }
+            foreach (var item in m.Procedures)
+            {
+                if (list.Contains(item.Key))
+                    continue;
+                if (Procedures.ContainsKey(item.Key))
+                    Procedures[item.Key] = item.Value;
+                else Procedures.Add(item.Key, item.Value);
+            }
+
         }
 
         public void RemoveWithout(string[] values)

@@ -9,28 +9,29 @@ namespace InterpreterBibaScript
         public readonly Types ReturnType;
         public readonly Parameter[] Parameters;
         public readonly string[] Commands;
-        public readonly Memory RunMemory;
+        public readonly string[] RunNames;
 
         public Function(string name, Types returnType, string[] commands, Memory runMemory, params Parameter[] parameters)
         {
             ReturnType = returnType;
             Commands = commands;
             Parameters = parameters;
-            RunMemory = new Memory(runMemory);
-            RunMemory.Functions.Add(name, this);
+            var m = new Memory(runMemory);
+            m.Functions.Add(name, this);
+            RunNames = m.GetAllNames().ToArray();
         }
 
         public string Run(params string[] values)
         {
-            var m = Memory.GetInstance();
-            Memory.SetInstance(RunMemory);
+            var m = new Memory(Memory.GetInstance());
+            Memory.GetInstance().RemoveWithout(RunNames);
             if (values.Length != Parameters.Length)
                 throw new Exception("Invalid count parameters");
             var thread = new ExecuteThread(ConvertParameters(Commands, values));
             try
             {
                 var result = thread.PeformBlockCommand(ReturnType);
-                Memory.SetInstance(m);
+                Memory.GetInstance().RecoveryWithout(m);
                 return result;
             }
             catch (Exception ex)
