@@ -1,6 +1,9 @@
 ﻿using InterpreterBibaScript;
 using System;
+using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace View
@@ -8,10 +11,29 @@ namespace View
     public partial class CodeEditor : Form
     {
         private string _nameCurentFile;
+        private Task _currentTask;
 
         public CodeEditor()
         {
             InitializeComponent();
+            KeyPreview = true;
+            KeyDown += CodeEditor_KeyDown;
+            MouseWheel += CodeEditor_MouseWheel;
+        }
+
+        private void CodeEditor_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+                SendKeys.Send("=");
+            else SendKeys.Send("-");
+        }
+
+        private void CodeEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Add)
+                richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size + 1);
+            else if (e.Control && e.KeyCode == Keys.Add)
+                richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size - 1);
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -61,7 +83,27 @@ namespace View
                 programm = richTextBox.Text;
             else programm = File.ReadAllText(_nameCurentFile);
 
-            BSExecutor.GetInstance().Run(programm);
+            if (_currentTask == null || _currentTask.IsCompleted)
+            {
+                _currentTask = Task.Run(() => { BSExecutor.GetInstance().Run(programm); HideConsoleWindow(); });
+            }
+            
+        }
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+
+        public static void HideConsoleWindow()
+        {
+            Console.ReadKey();
+            Console.Clear();
+            var handle = GetConsoleWindow();
+            ShowWindow(handle, SW_HIDE);
         }
     }
 }

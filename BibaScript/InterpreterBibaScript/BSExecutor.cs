@@ -24,27 +24,15 @@ namespace InterpreterBibaScript
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
+        const int SW_SHOW = 1;
 
         public static void ShowConsoleWindow()
         {
             var handle = GetConsoleWindow();
 
             if (handle == IntPtr.Zero)
-            {
                 AllocConsole();
-            }
-            else
-            {
-                ShowWindow(handle, SW_SHOW);
-            }
-        }
-
-        public static void HideConsoleWindow()
-        {
-            var handle = GetConsoleWindow();
-            ShowWindow(handle, SW_HIDE);
+            ShowWindow(handle, SW_SHOW);
         }
 
         //Run programm
@@ -55,15 +43,14 @@ namespace InterpreterBibaScript
             ShowConsoleWindow();
             try
             {
+                View.ColorWrite("Script started:\n", ConsoleColor.Cyan);
                 new ExecuteThread(commands).PeformBlockCommand();
+                View.ColorWrite("\nScript finished without errors.", ConsoleColor.Cyan);
             }
             catch (Exception ex)
             {
                 View.ColorWriteLine(ex.Message, ConsoleColor.Red);
             }
-            Console.ReadKey();
-            HideConsoleWindow();
-            Console.Clear();
         }
 
     }

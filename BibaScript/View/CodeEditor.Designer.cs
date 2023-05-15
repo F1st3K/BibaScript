@@ -35,13 +35,13 @@ namespace View
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.richTextBox = new System.Windows.Forms.RichTextBox();
-            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorShemeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,35 +99,6 @@ namespace View
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
-            // richTextBox
-            // 
-            this.richTextBox.AcceptsTab = true;
-            this.richTextBox.AutoWordSelection = true;
-            this.richTextBox.HideSelection = false;
-            this.richTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.richTextBox.Location = new System.Drawing.Point(0, 52);
-            this.richTextBox.Margin = new System.Windows.Forms.Padding(5);
-            this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(1298, 684);
-            this.richTextBox.TabIndex = 1;
-            this.richTextBox.Text = "";
-            this.richTextBox.WordWrap = false;
-            // 
-            // debugToolStripMenuItem
-            // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runProgramToolStripMenuItem});
-            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(79, 27);
-            this.debugToolStripMenuItem.Text = "Debug";
-            // 
-            // runProgramToolStripMenuItem
-            // 
-            this.runProgramToolStripMenuItem.Name = "runProgramToolStripMenuItem";
-            this.runProgramToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
-            this.runProgramToolStripMenuItem.Text = "Run program";
-            this.runProgramToolStripMenuItem.Click += new System.EventHandler(this.runProgramToolStripMenuItem_Click);
-            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -142,20 +113,49 @@ namespace View
             this.darkToolStripMenuItem,
             this.lightToolStripMenuItem});
             this.colorShemeToolStripMenuItem.Name = "colorShemeToolStripMenuItem";
-            this.colorShemeToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.colorShemeToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
             this.colorShemeToolStripMenuItem.Text = "Color Sheme";
             // 
             // darkToolStripMenuItem
             // 
             this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
-            this.darkToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.darkToolStripMenuItem.Size = new System.Drawing.Size(149, 28);
             this.darkToolStripMenuItem.Text = "Dark";
             // 
             // lightToolStripMenuItem
             // 
             this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
-            this.lightToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.lightToolStripMenuItem.Size = new System.Drawing.Size(149, 28);
             this.lightToolStripMenuItem.Text = "Light";
+            // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runProgramToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(79, 27);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // runProgramToolStripMenuItem
+            // 
+            this.runProgramToolStripMenuItem.Name = "runProgramToolStripMenuItem";
+            this.runProgramToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
+            this.runProgramToolStripMenuItem.Text = "Run program";
+            this.runProgramToolStripMenuItem.Click += new System.EventHandler(this.runProgramToolStripMenuItem_Click);
+            // 
+            // richTextBox
+            // 
+            this.richTextBox.AcceptsTab = true;
+            this.richTextBox.AutoWordSelection = true;
+            this.richTextBox.HideSelection = false;
+            this.richTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.richTextBox.Location = new System.Drawing.Point(0, 52);
+            this.richTextBox.Margin = new System.Windows.Forms.Padding(5);
+            this.richTextBox.Name = "richTextBox";
+            this.richTextBox.Size = new System.Drawing.Size(1298, 684);
+            this.richTextBox.TabIndex = 1;
+            this.richTextBox.Text = "";
+            this.richTextBox.WordWrap = false;
             // 
             // CodeEditor
             // 

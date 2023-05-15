@@ -1,11 +1,8 @@
-WriteLine("Привет)");
-
-func string Hello()
+func void Hello(float pivo)
 {
 	WriteLine("Привет)");
 	string i = ReadLine();
 	Write(i);
-	return i;
 }
 
 func void Pivo(int i, float pivo)
@@ -36,5 +33,5 @@ func void Pivo(int i, float pivo)
 		pivo = pivo - 1;
 	i = 1000;
 }
-
-Pivo(30, 4 - 3.4344444444);	
+Hello(3);
+Pivo(3, 4);
