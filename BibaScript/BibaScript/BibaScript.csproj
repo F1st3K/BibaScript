@@ -54,9 +54,9 @@
       <Project>{2dcffcaa-49ae-4ee6-b601-7f6b61ce3848}</Project>
       <Name>BeautifulСonsole</Name>
     </ProjectReference>
-    <ProjectReference Include="..\InterpreterBibaScript\InterpreterBibaScript.csproj">
+    <ProjectReference Include="..\InterpreterBibaScript\Interpreter.csproj">
       <Project>{eed88ea9-89a2-4c73-a952-7d08ebedbf1b}</Project>
-      <Name>InterpreterBibaScript</Name>
+      <Name>Interpreter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

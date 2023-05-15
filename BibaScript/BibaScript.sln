@@ -7,11 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibaScript", "BibaScript\Bi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautifulСonsole", "BeautifulСonsole\BeautifulСonsole.csproj", "{2DCFFCAA-49AE-4EE6-B601-7F6B61CE3848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterpreterBibaScript", "InterpreterBibaScript\InterpreterBibaScript.csproj", "{EED88EA9-89A2-4C73-A952-7D08EBEDBF1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter", "InterpreterBibaScript\Interpreter.csproj", "{EED88EA9-89A2-4C73-A952-7D08EBEDBF1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxBibaScript", "SyntaxBibaScript\SyntaxBibaScript.csproj", "{563DD99B-CA96-4D9F-A032-35079744CAE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syntax", "SyntaxBibaScript\Syntax.csproj", "{563DD99B-CA96-4D9F-A032-35079744CAE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicCalculator", "LogicCalculator\LogicCalculator.csproj", "{51AD4B63-D89F-4CFF-9C22-C0C72830A979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{92A15F98-939E-46B9-B045-75114E79695D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{51AD4B63-D89F-4CFF-9C22-C0C72830A979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51AD4B63-D89F-4CFF-9C22-C0C72830A979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51AD4B63-D89F-4CFF-9C22-C0C72830A979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92A15F98-939E-46B9-B045-75114E79695D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92A15F98-939E-46B9-B045-75114E79695D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92A15F98-939E-46B9-B045-75114E79695D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92A15F98-939E-46B9-B045-75114E79695D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

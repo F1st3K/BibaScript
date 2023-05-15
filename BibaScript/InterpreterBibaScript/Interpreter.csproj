@@ -68,9 +68,9 @@
       <Project>{51ad4b63-d89f-4cff-9c22-c0c72830a979}</Project>
       <Name>LogicCalculator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SyntaxBibaScript\SyntaxBibaScript.csproj">
+    <ProjectReference Include="..\SyntaxBibaScript\Syntax.csproj">
       <Project>{563dd99b-ca96-4d9f-a032-35079744cae8}</Project>
-      <Name>SyntaxBibaScript</Name>
+      <Name>Syntax</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,10 +1,12 @@
+WriteLine("Привет)");
+
 func string Hello()
-	{
-		WriteLine("Привет)");
-		string i = ReadLine();
-		Write(i);
-		return i;
-	}
+{
+	WriteLine("Привет)");
+	string i = ReadLine();
+	Write(i);
+	return i;
+}
 
 func void Pivo(int i, float pivo)
 {
