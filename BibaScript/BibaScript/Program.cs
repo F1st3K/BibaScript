@@ -9,18 +9,18 @@ namespace BibaScript
     {
         static void Main(string[] args)
         {
-            //foreach (var file in args)
-            //{
+            foreach (var file in args)
+            {
                 try
                 {
-                    BSExecutor.GetInstance().Run(File.ReadAllText("prog.bs"));
+                    BSExecutor.GetInstance().Run(File.ReadAllText(file));
                 }
                 catch (Exception ex)
                 {
                     View.ColorWriteLine(ex.Message, ConsoleColor.Red);
-                    //continue;
+                    continue;
                 }
-            //}
+            }
         }
 
         
