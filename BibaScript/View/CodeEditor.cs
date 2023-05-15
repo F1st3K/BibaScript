@@ -85,7 +85,10 @@ namespace View
 
             if (_currentTask == null || _currentTask.IsCompleted)
             {
-                _currentTask = Task.Run(() => { BSExecutor.GetInstance().Run(programm); HideConsoleWindow(); });
+                _currentTask = Task.Run(() => { 
+                    BSExecutor.GetInstance().Run(programm);
+                    HideConsoleWindow(); 
+                });
             }
             
         }
@@ -104,6 +107,45 @@ namespace View
             Console.Clear();
             var handle = GetConsoleWindow();
             ShowWindow(handle, SW_HIDE);
+        }
+
+        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BackColor = Color.FromArgb(64, 64, 64);
+            richTextBox.ForeColor = Color.AntiqueWhite;
+            richTextBox.BackColor = Color.DimGray;
+            menuStrip.ForeColor = Color.White;
+            menuStrip.BackColor = Color.FromArgb(64, 64, 64);
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+                foreach (ToolStripMenuItem item1 in item.DropDownItems)
+                {
+                    item1.ForeColor = Color.White;
+                    foreach (ToolStripMenuItem item2 in item1.DropDownItems)
+                        item2.ForeColor = Color.White;
+                }
+            menuStrip.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());           
+        }
+
+        private void lightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BackColor = Color.FromArgb(200, 200, 200);
+            richTextBox.ForeColor = Color.Black;
+            richTextBox.BackColor = Color.WhiteSmoke;
+            menuStrip.ForeColor = Color.Black;
+            menuStrip.BackColor = Color.FromArgb(200, 200, 200);
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+                foreach (ToolStripMenuItem item1 in item.DropDownItems)
+                {
+                    item1.ForeColor = Color.Black;
+                    foreach (ToolStripMenuItem item2 in item1.DropDownItems)
+                        item2.ForeColor = Color.Black;
+                }
+            menuStrip.Renderer = new ToolStripProfessionalRenderer(new LightColorTable());
+        }
+
+        private void CodeEditor_Load(object sender, EventArgs e)
+        {
+            darkToolStripMenuItem_Click(sender, e);
         }
     }
 }
