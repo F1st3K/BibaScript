@@ -1,4 +1,5 @@
 ﻿using InterpreterBibaScript;
+using SyntaxBibaScript;
 using System;
 using System.Drawing;
 using System.IO;
@@ -34,6 +35,9 @@ namespace View
                 richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size + 1);
             else if (e.Control && e.KeyCode == Keys.Add)
                 richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size - 1);
+
+            if (e.Control || e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+                ColorText();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -123,7 +127,7 @@ namespace View
                     foreach (ToolStripMenuItem item2 in item1.DropDownItems)
                         item2.ForeColor = Color.White;
                 }
-            menuStrip.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());           
+            menuStrip.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());
         }
 
         private void lightToolStripMenuItem_Click(object sender, EventArgs e)
@@ -146,6 +150,28 @@ namespace View
         private void CodeEditor_Load(object sender, EventArgs e)
         {
             darkToolStripMenuItem_Click(sender, e);
+        }
+
+        private void ColorText()
+        {
+            var color = richTextBox.ForeColor;
+            richTextBox.SetColor(CodeConstructions.GetInstance().Values, Color.FromArgb(200, 100, 200));
+            richTextBox.SetColor(CodeTypes.GetInstance().Values, Color.FromArgb(100, 100, 200));
+            richTextBox.SetColor(CodeTypeWords.GetInstance().Values, Color.FromArgb(100, 200, 100));
+            //string word = string.Empty;
+            //int countS = 0;
+            //foreach (var ch in richTextBox.Text)
+            //{
+            //    if (ch == CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString)[0])
+            //        countS++;
+            //    if (countS % 2 != 0)
+            //        word += ch;
+            //}
+            //richTextBox.SetColor(word, Color.FromArgb(200, 200, 100));
+
+            richTextBox.SelectionStart += richTextBox.SelectionLength;
+            richTextBox.SelectionLength = 0;
+            richTextBox.SelectionColor = color;
         }
     }
 }

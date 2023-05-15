@@ -74,28 +74,28 @@ namespace View
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(171, 28);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(171, 28);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(171, 28);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(171, 28);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -113,20 +113,20 @@ namespace View
             this.darkToolStripMenuItem,
             this.lightToolStripMenuItem});
             this.colorShemeToolStripMenuItem.Name = "colorShemeToolStripMenuItem";
-            this.colorShemeToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.colorShemeToolStripMenuItem.Size = new System.Drawing.Size(215, 28);
             this.colorShemeToolStripMenuItem.Text = "Color Sheme";
             // 
             // darkToolStripMenuItem
             // 
             this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
-            this.darkToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.darkToolStripMenuItem.Size = new System.Drawing.Size(149, 28);
             this.darkToolStripMenuItem.Text = "Dark";
             this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
             // 
             // lightToolStripMenuItem
             // 
             this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
-            this.lightToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.lightToolStripMenuItem.Size = new System.Drawing.Size(149, 28);
             this.lightToolStripMenuItem.Text = "Light";
             this.lightToolStripMenuItem.Click += new System.EventHandler(this.lightToolStripMenuItem_Click);
             // 

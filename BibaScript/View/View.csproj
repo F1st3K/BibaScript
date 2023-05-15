@@ -52,6 +52,7 @@
     <Compile Include="CodeEditor.Designer.cs">
       <DependentUpon>CodeEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="ColorRichBox.cs" />
     <Compile Include="DarkColorTable.cs" />
     <Compile Include="LightColorTable.cs" />
     <Compile Include="Program.cs" />
@@ -85,6 +86,10 @@
     <ProjectReference Include="..\InterpreterBibaScript\Interpreter.csproj">
       <Project>{EED88EA9-89A2-4C73-A952-7D08EBEDBF1B}</Project>
       <Name>Interpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SyntaxBibaScript\Syntax.csproj">
+      <Project>{563DD99B-CA96-4D9F-A032-35079744CAE8}</Project>
+      <Name>Syntax</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
