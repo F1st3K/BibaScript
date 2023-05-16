@@ -9,7 +9,6 @@ namespace BibaScript
     {
         static void Main(string[] args)
         {
-            args = new string[] { "C:\\repos\\BibaScript\\BibaScript\\BibaScript\\bin\\Debug\\Calculator.bs" };
             foreach (var file in args)
             {
                 try
