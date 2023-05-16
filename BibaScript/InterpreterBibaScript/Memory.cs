@@ -8,6 +8,11 @@ namespace InterpreterBibaScript
     {
         private static Memory _instance;
 
+        public static void SetNewInstance()
+        {
+            _instance = new Memory();
+        }
+
         public static Memory GetInstance()
         {
             if (_instance == null)

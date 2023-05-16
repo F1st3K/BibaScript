@@ -38,6 +38,7 @@ namespace InterpreterBibaScript
         //Run programm
         public void Run(string programm)
         {
+            Memory.SetNewInstance();
             var parser = new Parser(new string[] { " ", "\n", "\t", "\r" });
             var commands = parser.Parse(programm);
             ShowConsoleWindow();

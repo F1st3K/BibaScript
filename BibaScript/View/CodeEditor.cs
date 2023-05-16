@@ -36,7 +36,7 @@ namespace View
             else if (e.Control && e.KeyCode == Keys.Add)
                 richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size - 1);
 
-            if (e.Control || e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+            if (e.Control)
                 ColorText();
         }
 
@@ -54,6 +54,7 @@ namespace View
                 return;
             _nameCurentFile = OFD.FileName;
             richTextBox.Text = File.ReadAllText(_nameCurentFile);
+            ColorText();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -128,6 +129,7 @@ namespace View
                         item2.ForeColor = Color.White;
                 }
             menuStrip.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());
+            ColorText();
         }
 
         private void lightToolStripMenuItem_Click(object sender, EventArgs e)
@@ -145,6 +147,7 @@ namespace View
                         item2.ForeColor = Color.Black;
                 }
             menuStrip.Renderer = new ToolStripProfessionalRenderer(new LightColorTable());
+            ColorText();
         }
 
         private void CodeEditor_Load(object sender, EventArgs e)
@@ -154,22 +157,23 @@ namespace View
 
         private void ColorText()
         {
+            
             var color = richTextBox.ForeColor;
-            richTextBox.SetColor(CodeConstructions.GetInstance().Values, Color.FromArgb(200, 100, 200));
-            richTextBox.SetColor(CodeTypes.GetInstance().Values, Color.FromArgb(100, 100, 200));
-            richTextBox.SetColor(CodeTypeWords.GetInstance().Values, Color.FromArgb(100, 200, 100));
-            //string word = string.Empty;
-            //int countS = 0;
-            //foreach (var ch in richTextBox.Text)
-            //{
-            //    if (ch == CodeTypeWords.GetInstance().GetValue(SpecialWords.SeparatorString)[0])
-            //        countS++;
-            //    if (countS % 2 != 0)
-            //        word += ch;
-            //}
-            //richTextBox.SetColor(word, Color.FromArgb(200, 200, 100));
+            var position = richTextBox.SelectionStart;
+            foreach (var item in CodeOperators.GetInstance().Values)
+                richTextBox.SetColorAbs(item, Color.FromArgb(220, 180, 50));
+            foreach (var item in CodeSeparators.GetInstance().Values)
+                richTextBox.SetColorAbs(item, Color.FromArgb(180, 180, 200));
+            foreach (var item in CodeTypes.GetInstance().Values)
+                richTextBox.SetColor(item, Color.FromArgb(100, 150, 200));
+            foreach (var item in CodeConstructions.GetInstance().Values)
+                richTextBox.SetColor(item, Color.FromArgb(200, 100, 200));
+            foreach (var item in CodeTypeWords.GetInstance().Values)
+                richTextBox.SetColor(item, Color.FromArgb(70, 170, 150));
+            richTextBox.SetColorAbs("\u0022", Color.FromArgb(200, 150, 100));
+            
 
-            richTextBox.SelectionStart += richTextBox.SelectionLength;
+            richTextBox.SelectionStart = position;
             richTextBox.SelectionLength = 0;
             richTextBox.SelectionColor = color;
         }

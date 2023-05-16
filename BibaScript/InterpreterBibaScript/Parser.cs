@@ -21,7 +21,7 @@ namespace InterpreterBibaScript
         public string[] Parse(string programm)
         {
             var commands = new List<string>();
-            var temp = Split(programm, EmptySeparators);
+            var temp = Split(programm + "\n", EmptySeparators);
             foreach (var element in temp)
             {
                 if (element.StartsWith(_strSeparator) && element.EndsWith(_strSeparator))
@@ -50,6 +50,8 @@ namespace InterpreterBibaScript
             string temp = string.Empty;
             for (int i = 0; i < value.Length; i++)
             {
+                if (list.Count == 150)
+                    ;
                 string str = value[i].ToString();
                 if (str == _strSeparator)
                     countS++;

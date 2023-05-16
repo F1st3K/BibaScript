@@ -148,6 +148,9 @@ namespace View
             // richTextBox
             // 
             this.richTextBox.AcceptsTab = true;
+            this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.AutoWordSelection = true;
             this.richTextBox.HideSelection = false;
             this.richTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -169,6 +172,7 @@ namespace View
             this.Font = new System.Drawing.Font("Consolas", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(5);
+            this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "CodeEditor";
             this.Text = "CodeEditor";
             this.Load += new System.EventHandler(this.CodeEditor_Load);

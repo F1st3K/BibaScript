@@ -3,4 +3,3 @@ C:\repos\BibaScript\BibaScript\BeautifulСonsole\bin\Debug\BeautifulСonsole.pdb
 C:\repos\BibaScript\BibaScript\BeautifulСonsole\obj\Debug\BeautifulСonsole.csproj.CoreCompileInputs.cache
 C:\repos\BibaScript\BibaScript\BeautifulСonsole\obj\Debug\BeautifulСonsole.dll
 C:\repos\BibaScript\BibaScript\BeautifulСonsole\obj\Debug\BeautifulСonsole.pdb
-C:\repos\BibaScript\BibaScript\BeautifulСonsole\obj\Debug\BeautifulСonsole.csproj.AssemblyReference.cache
