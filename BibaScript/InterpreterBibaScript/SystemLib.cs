@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using SyntaxBibaScript;
+using Calc = Calculator.Calculator;
 
 namespace InterpreterBibaScript
 {
@@ -18,6 +19,8 @@ namespace InterpreterBibaScript
         public readonly Dictionary<string, SystemFunction> Functions;
 
         public readonly Dictionary<string, SystemProcedure> Procedures;
+
+        public readonly string _s = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorString);
 
         public SystemLib()
         {
@@ -57,6 +60,111 @@ namespace InterpreterBibaScript
                 new Parameter(Types.String, "value")));
             Procedures.Add("WriteLine", new SystemProcedure(WriteLine,
                 new Parameter(Types.String, "value")));
+            Functions.Add("Math.Calculate", new SystemFunction(Calculate,
+                Types.Float,
+                new Parameter(Types.String, "expression")));
+            Functions.Add("Math.Min", new SystemFunction(Min,
+                Types.Float,
+                new Parameter(Types.Float, "a"),
+                new Parameter(Types.Float, "b")));
+            Functions.Add("Math.Max", new SystemFunction(Max,
+                Types.Float,
+                new Parameter(Types.Float, "a"),
+                new Parameter(Types.Float, "b")));
+            Functions.Add("Math.Sqrt", new SystemFunction(Sqrt,
+                Types.Float,
+                new Parameter(Types.Float, "value")));
+            Functions.Add("Math.Abs", new SystemFunction(Abs,
+                Types.Float,
+                new Parameter(Types.Float, "value")));
+            Functions.Add("String.Replace", new SystemFunction(Replace,
+                Types.String,
+                new Parameter(Types.String, "word"),
+                new Parameter(Types.String, "oldValue"),
+                new Parameter(Types.String, "newValue")));
+            Functions.Add("String.Substring", new SystemFunction(Substring,
+                Types.String,
+                new Parameter(Types.String, "word"),
+                new Parameter(Types.Integer, "indexStart"),
+                new Parameter(Types.Integer, "lenght")));
+            Functions.Add("String.Contains", new SystemFunction(Contains,
+                Types.Boolean,
+                new Parameter(Types.String, "word"),
+                new Parameter(Types.String, "value")));
+        }
+
+        private string Contains(string[] arg)
+        {
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            return a.Contains(b)
+                ? CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueTrue)
+                : CodeTypeWords.GetInstance().GetValue(SpecialWords.ValueFalse);
+        }
+
+        private string Substring(string[] arg)
+        {
+            if (arg.Length != 3)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Convert.ToInt32(Code.TryRemoveStringSeparators(arg[1]));
+            var c = Convert.ToInt32(Code.TryRemoveStringSeparators(arg[2]));
+            return _s + a.Substring(b, c) + _s;
+        }
+
+        private string Replace(string[] arg)
+        {
+            if (arg.Length != 3)
+                throw new Exception("Invalid count parameters");
+            var a = Code.TryRemoveStringSeparators(arg[0]);
+            var b = Code.TryRemoveStringSeparators(arg[1]);
+            var c = Code.TryRemoveStringSeparators(arg[2]);
+            return _s + a.Replace(b, c) + _s;
+        }
+
+        private string Abs(string[] arg)
+        {
+            if (arg.Length != 1)
+                throw new Exception("Invalid count parameters");
+            var a = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[0]));
+            return Math.Abs(a).ToString();
+        }
+
+        private string Sqrt(string[] arg)
+        {
+            if (arg.Length != 1)
+                throw new Exception("Invalid count parameters");
+            var a = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[0]));
+            return Math.Sqrt(a).ToString();
+        }
+
+        private string Max(string[] arg)
+        {
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[0]));
+            var b = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[1]));
+            return Math.Max(a, b).ToString();
+        }
+
+        private string Min(string[] arg)
+        {
+            if (arg.Length != 2)
+                throw new Exception("Invalid count parameters");
+            var a = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[0]));
+            var b = Convert.ToSingle(Code.TryRemoveStringSeparators(arg[1]));
+            return Math.Min(a, b).ToString();
+        }
+
+        private string Calculate(string[] arg)
+        {
+            if (arg.Length != 1)
+                throw new Exception("Invalid count parameters");
+            var calculator = new Calc();
+            calculator.Calculate(Code.TryRemoveStringSeparators(arg[0]));
+            return calculator.Result.ToString();
         }
 
         private string WriteLine(string[] arg)
@@ -79,8 +187,7 @@ namespace InterpreterBibaScript
         {
             if (arg.Length != 0)
                 throw new Exception("Invalid count parameters");
-            var s = CodeSeparators.GetInstance().GetValue(SpecialWords.SeparatorString);
-            return s + Console.ReadLine() + s;
+            return _s + Console.ReadLine() + _s;
         }
 
         private string LessEqual(string[] arg)

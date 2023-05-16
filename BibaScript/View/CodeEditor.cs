@@ -13,6 +13,7 @@ namespace View
     {
         private string _nameCurentFile;
         private Task _currentTask;
+        private Color _foreColor;
 
         public CodeEditor()
         {
@@ -20,6 +21,7 @@ namespace View
             KeyPreview = true;
             KeyDown += CodeEditor_KeyDown;
             MouseWheel += CodeEditor_MouseWheel;
+            richTextBox.ForeColorChanged += (a, e) => { _foreColor = richTextBox.ForeColor; };
         }
 
         private void CodeEditor_MouseWheel(object sender, MouseEventArgs e)
@@ -35,9 +37,13 @@ namespace View
                 richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size + 1);
             else if (e.Control && e.KeyCode == Keys.Add)
                 richTextBox.Font = new Font(richTextBox.Font.FontFamily, richTextBox.Font.Size - 1);
-
-            if (e.Control)
+            else if (e.Control && e.KeyCode == Keys.B)
                 ColorText();
+            else if (e.KeyCode == Keys.Tab && e.Shift)
+                SendKeys.Send("{BS}{BS}{BS}{BS}{BS}");
+            else if (e.KeyCode == Keys.Tab)
+                SendKeys.Send("{BS}    ");
+            richTextBox.SelectionColor = _foreColor;
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -89,13 +95,10 @@ namespace View
             else programm = File.ReadAllText(_nameCurentFile);
 
             if (_currentTask == null || _currentTask.IsCompleted)
-            {
                 _currentTask = Task.Run(() => { 
                     BSExecutor.GetInstance().Run(programm);
                     HideConsoleWindow(); 
                 });
-            }
-            
         }
 
         [DllImport("kernel32.dll")]
@@ -157,7 +160,6 @@ namespace View
 
         private void ColorText()
         {
-            
             var color = richTextBox.ForeColor;
             var position = richTextBox.SelectionStart;
             foreach (var item in CodeOperators.GetInstance().Values)
@@ -172,7 +174,6 @@ namespace View
                 richTextBox.SetColor(item, Color.FromArgb(70, 170, 150));
             richTextBox.SetColorAbs("\u0022", Color.FromArgb(200, 150, 100));
             
-
             richTextBox.SelectionStart = position;
             richTextBox.SelectionLength = 0;
             richTextBox.SelectionColor = color;

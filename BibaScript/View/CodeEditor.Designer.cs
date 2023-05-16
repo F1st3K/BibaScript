@@ -152,12 +152,12 @@ namespace View
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.AutoWordSelection = true;
-            this.richTextBox.HideSelection = false;
+            this.richTextBox.EnableAutoDragDrop = true;
             this.richTextBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.richTextBox.Location = new System.Drawing.Point(0, 52);
+            this.richTextBox.Location = new System.Drawing.Point(0, 38);
             this.richTextBox.Margin = new System.Windows.Forms.Padding(5);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(1298, 684);
+            this.richTextBox.Size = new System.Drawing.Size(1298, 698);
             this.richTextBox.TabIndex = 1;
             this.richTextBox.Text = "";
             this.richTextBox.WordWrap = false;
