@@ -138,7 +138,11 @@ namespace InterpreterBibaScript
                     {
                         if (_command[i] == _beginCode)
                             new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                        else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                        else
+                        {
+                            var inst = Code.FindInstruction(i, _command, _endInstruction, out i);
+                            new ExecuteInstruction(inst).PeformCommand();
+                        }
                         continue;
                     }
                     else break;
@@ -165,7 +169,11 @@ namespace InterpreterBibaScript
                         {
                             if (_command[i] == _beginCode)
                                 new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                            else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                            else
+                            {
+                                var inst = Code.FindInstruction(i, _command, _endInstruction, out i);
+                                new ExecuteInstruction(inst).PeformCommand();
+                            }
                             break;
                         }
                         else
@@ -186,7 +194,11 @@ namespace InterpreterBibaScript
                             {
                                 if (_command[i] == _beginCode)
                                     new ExecuteThread(Code.FindBlock(i, _command, _beginCode, _endCode, out i)).PeformBlockCommand();
-                                else new ExecuteInstruction(Code.FindInstruction(i, _command, _endInstruction, out i)).PeformCommand();
+                                else
+                                {
+                                    var inst = Code.FindInstruction(i, _command, _endInstruction, out i);
+                                    new ExecuteInstruction(inst).PeformCommand();
+                                }
                                 break;
                             }
                         }

@@ -9,7 +9,6 @@ namespace BibaScript
     {
         static void Main(string[] args)
         {
-            args = new string[] { "prog.bs" };
             foreach (var file in args)
             {
                 try
