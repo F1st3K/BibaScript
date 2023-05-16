@@ -29,6 +29,7 @@ namespace View
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CodeEditor));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,11 +171,12 @@ namespace View
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Consolas", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(5);
             this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "CodeEditor";
-            this.Text = "CodeEditor";
+            this.Text = "BScript Editor";
             this.Load += new System.EventHandler(this.CodeEditor_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

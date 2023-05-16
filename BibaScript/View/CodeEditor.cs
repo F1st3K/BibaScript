@@ -119,6 +119,15 @@ namespace View
 
         private void darkToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var form = new Start();
+            form.Show();
+            Hide();
+            form.MidleLoad(Show, 1000);
+            DarkMode();
+        }
+
+        private void DarkMode()
+        {
             BackColor = Color.FromArgb(64, 64, 64);
             richTextBox.ForeColor = Color.AntiqueWhite;
             richTextBox.BackColor = Color.DimGray;
@@ -136,6 +145,15 @@ namespace View
         }
 
         private void lightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new Start();
+            form.Show();
+            Hide();
+            form.MidleLoad(Show, 1000);
+            LightMode();
+        }
+
+        private void LightMode()
         {
             BackColor = Color.FromArgb(200, 200, 200);
             richTextBox.ForeColor = Color.Black;
@@ -155,7 +173,7 @@ namespace View
 
         private void CodeEditor_Load(object sender, EventArgs e)
         {
-            darkToolStripMenuItem_Click(sender, e);
+            DarkMode();
         }
 
         private void ColorText()

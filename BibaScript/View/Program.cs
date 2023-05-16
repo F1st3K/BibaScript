@@ -16,7 +16,9 @@ namespace View
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new CodeEditor());
+            var form = new Start();
+            form.StartLoad(1500);
+            Application.Run(form);
         }
     }
 }
