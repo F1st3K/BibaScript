@@ -176,6 +176,7 @@ namespace View
             this.Margin = new System.Windows.Forms.Padding(5);
             this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "CodeEditor";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BScript Editor";
             this.Load += new System.EventHandler(this.CodeEditor_Load);
             this.menuStrip.ResumeLayout(false);

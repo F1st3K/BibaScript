@@ -24,7 +24,7 @@ namespace View
             var timer = new Timer();
             timer.Interval = time;
             timer.Tick += (a, ev) => { form.Show(); Hide(); timer.Stop(); };
-            form.FormClosed += (a, ev) => { Close(); Application.Exit(); };
+            form.FormClosed += (a, ev) => { Show(); MidleLoad(() => { Application.Exit(); }, 1000); };
             timer.Start();
         }
     }
